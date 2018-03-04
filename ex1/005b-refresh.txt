@@ -1,0 +1,32 @@
+Query (id=5469e8e004c20e4:29e3765600000000)
+  Summary
+    Session ID: a4b05b80e55cd99:45ed83f812d7569f
+    Session Type: BEESWAX
+    Start Time: 2018-02-18 16:09:13.024111000
+    End Time: 2018-02-18 16:09:13.193135000
+    Query Type: DDL
+    Query State: FINISHED
+    Query Status: OK
+    Impala Version: impalad version 2.11.0-cdh5.14.0 RELEASE (build d68206561bce6b26762d62c01a78e6cd27aa7690)
+    User: REDACTED
+    Connected User: REDACTED
+    Delegated User: 
+    Network Address: REDACTED:44980
+    Default Db: default
+    Sql Statement: refresh taxi_trip_parq
+    Coordinator: jyu-impala-2.gce.cloudera.com:22000
+    Query Options (set by configuration and planner): MT_DOP=0
+    DDL Type: RESET_METADATA
+    
+    Query Timeline
+      Query submitted: 0ns (0)
+      Planning finished: 1ms (1000088)
+      Request finished: 168ms (168014717)
+      First row fetched: 169ms (169014804)
+      Unregister query: 169ms (169014804)
+  ImpalaServer
+    - CatalogOpExecTimer: 165ms (165014453)
+    - ClientFetchWaitTimer: 1ms (1000087)
+    - InactiveTotalTime: 0ns (0)
+    - RowMaterializationTimer: 0ns (0)
+    - TotalTime: 0ns (0)

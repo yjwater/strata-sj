@@ -1,0 +1,2788 @@
+Query (id=643bdb2d001170e:746a90a00000000)
+  Summary
+    Session ID: 6847d8bd4ba3af83:85e1a0bd91f7e79f
+    Session Type: BEESWAX
+    Start Time: 2018-03-04 11:57:16.782418000
+    End Time: 2018-03-04 11:57:53.421495000
+    Query Type: DML
+    Query State: FINISHED
+    Query Status: OK
+    Impala Version: impalad version 2.11.0-cdh5.14.0 RELEASE (build d68206561bce6b26762d62c01a78e6cd27aa7690)
+    User: root
+    Connected User: REDACTED
+    Delegated User: 
+    Network Address: REDACTED:45108
+    Default Db: default
+    Sql Statement: insert overwrite taxi_trip_partitioned partition(pickup_date) /* +CLUSTERED */ select *, to_date(pickup_datetime) from taxi_trip_parq where date_part('month', pickup_datetime) = 10
+    Coordinator: jyu-impala-2.gce.cloudera.com:22000
+    Query Options (set by configuration): 
+    Query Options (set by configuration and planner): MT_DOP=0
+    Plan: 
+----------------
+Max Per-Host Resource Reservation: Memory=12.00MB
+Per-Host Resource Estimates: Memory=875.10MB
+
+F01:PLAN FRAGMENT [HASH(to_date(pickup_datetime))] hosts=9 instances=9
+|  Per-Host Resources: mem-estimate=699.10MB mem-reservation=12.00MB
+WRITE TO HDFS [default.taxi_trip_partitioned, OVERWRITE=true, PARTITION-KEYS=(to_date(pickup_datetime))]
+|  partitions=26264382
+|  mem-estimate=623.10MB mem-reservation=0B
+|
+02:SORT
+|  order by: to_date(pickup_datetime) ASC NULLS LAST
+|  materialized: to_date(pickup_datetime)
+|  mem-estimate=76.00MB mem-reservation=12.00MB spill-buffer=2.00MB
+|  tuple-ids=2 row-size=340B cardinality=17318509
+|
+01:EXCHANGE [HASH(to_date(pickup_datetime))]
+|  mem-estimate=0B mem-reservation=0B
+|  tuple-ids=0 row-size=324B cardinality=17318509
+|
+F00:PLAN FRAGMENT [RANDOM] hosts=9 instances=9
+Per-Host Resources: mem-estimate=176.00MB mem-reservation=0B
+00:SCAN HDFS [default.taxi_trip_parq, RANDOM]
+   partitions=1/1 files=29 size=6.90GB
+   predicates: date_part('month', pickup_datetime) = 10
+   stats-rows=173185091 extrapolated-rows=disabled
+   table stats: rows=173185091 size=6.90GB
+   column stats: all
+   parquet dictionary predicates: date_part('month', pickup_datetime) = 10
+   mem-estimate=176.00MB mem-reservation=0B
+   tuple-ids=0 row-size=324B cardinality=17318509
+----------------
+    Estimated Per-Host Mem: 917603840
+    Per Host Min Reservation: jyu-impala-10.gce.cloudera.com:22000(12.00 MB) jyu-impala-2.gce.cloudera.com:22000(12.00 MB) jyu-impala-3.gce.cloudera.com:22000(12.00 MB) jyu-impala-4.gce.cloudera.com:22000(12.00 MB) jyu-impala-5.gce.cloudera.com:22000(12.00 MB) jyu-impala-6.gce.cloudera.com:22000(12.00 MB) jyu-impala-7.gce.cloudera.com:22000(12.00 MB) jyu-impala-8.gce.cloudera.com:22000(12.00 MB) jyu-impala-9.gce.cloudera.com:22000(12.00 MB) 
+    Request Pool: REDACTED.REDACTED
+    Admission result: Admitted immediately
+    ExecSummary: 
+Operator       #Hosts   Avg Time   Max Time   #Rows  Est. #Rows   Peak Mem  Est. Peak Mem  Detail                         
+--------------------------------------------------------------------------------------------------------------------------
+02:SORT             9    3s254ms    9s303ms  15.00M      17.32M    1.27 GB       76.00 MB                                 
+01:EXCHANGE         9   16s696ms   17s630ms  15.00M      17.32M          0              0  HASH(to_date(pickup_datetime)) 
+00:SCAN HDFS        9  148.456ms  422.035ms  15.00M      17.32M  596.23 MB      176.00 MB  default.taxi_trip_parq         
+    Errors: 
+    - ComputeScanRangeAssignmentTimer: 1ms (1000082)
+    - InactiveTotalTime: 0ns (0)
+    - TotalTime: 0ns (0)
+    Planner Timeline
+      Analysis finished: 2ms (2152204)
+      Value transfer graph computed: 2ms (2386438)
+      Single node plan created: 4ms (4186613)
+      Runtime filters computed: 4ms (4244341)
+      Distributed plan created: 4ms (4852860)
+      Lineage info computed: 5ms (5461950)
+      Planning finished: 12ms (12544291)
+    Query Timeline
+      Query submitted: 0ns (0)
+      Planning finished: 20ms (20001640)
+      Submit for admission: 21ms (21001722)
+      Completed admission: 27ms (27002214)
+      Ready to start on 9 backends: 28ms (28002296)
+      All 9 execution backends (18 fragment instances) started: 48ms (48003936)
+      DML data written: 36.01s (36005952760)
+      DML Metastore update finished: 36.51s (36505993771)
+      Request finished: 36.51s (36505993771)
+      Unregister query: 36.64s (36639004680)
+  ImpalaServer
+    - ClientFetchWaitTimer: 133ms (133010909)
+    - InactiveTotalTime: 0ns (0)
+    - MetastoreUpdateTimer: 500ms (500041011)
+    - RowMaterializationTimer: 0ns (0)
+    - TotalTime: 0ns (0)
+  Execution Profile 643bdb2d001170e:746a90a00000000
+    Number of filters: 0
+    Filter routing table: 
+ ID  Src. Node  Tgt. Node(s)  Target type  Partition filter  Pending (Expected)  First arrived  Completed   Enabled
+-------------------------------------------------------------------------------------------------------------------
+
+    Backend startup latencies: Count: 9, min / max: 4ms / 10ms, 25th %-ile: 4ms, 50th %-ile: 5ms, 75th %-ile: 9ms, 90th %-ile: 9ms, 95th %-ile: 10ms, 99.9th %-ile: 10ms
+    DML Stats: 
+Partition: pickup_date=2013-10-01/
+NumModifiedRows: 452769
+  BytesWritten: 14.98 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.21 MB
+    dropoff_latitude: 1.57 MB
+    dropoff_longitude: 951.14 KB
+    fare_amount: 484.20 KB
+    hack_license: 1.57 MB
+    medallion: 1.17 MB
+    mta_tax: 4.51 KB
+    passenger_count: 139.09 KB
+    payment_type: 100.60 KB
+    pickup_datetime: 2.26 MB
+    pickup_latitude: 1.03 MB
+    pickup_longitude: 892.76 KB
+    rate_code: 27.32 KB
+    store_and_fwd_flag: 30.20 KB
+    surcharge: 124.17 KB
+    tip_amount: 447.80 KB
+    tolls_amount: 56.94 KB
+    total_amount: 666.06 KB
+    trip_distance: 668.78 KB
+    trip_time_in_secs: 682.47 KB
+    vendor_id: 18.42 KB
+Partition: pickup_date=2013-10-02/
+NumModifiedRows: 475182
+  BytesWritten: 16.06 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.41 MB
+    dropoff_latitude: 1.77 MB
+    dropoff_longitude: 998.42 KB
+    fare_amount: 508.97 KB
+    hack_license: 1.62 MB
+    medallion: 1.20 MB
+    mta_tax: 4.90 KB
+    passenger_count: 148.27 KB
+    payment_type: 115.87 KB
+    pickup_datetime: 2.48 MB
+    pickup_latitude: 1.08 MB
+    pickup_longitude: 934.11 KB
+    rate_code: 28.75 KB
+    store_and_fwd_flag: 50.87 KB
+    surcharge: 147.37 KB
+    tip_amount: 480.18 KB
+    tolls_amount: 60.39 KB
+    total_amount: 699.09 KB
+    trip_distance: 695.95 KB
+    trip_time_in_secs: 723.73 KB
+    vendor_id: 36.98 KB
+Partition: pickup_date=2013-10-03/
+NumModifiedRows: 496807
+  BytesWritten: 16.78 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.53 MB
+    dropoff_latitude: 1.89 MB
+    dropoff_longitude: 1.02 MB
+    fare_amount: 532.66 KB
+    hack_license: 1.66 MB
+    medallion: 1.24 MB
+    mta_tax: 5.37 KB
+    passenger_count: 158.84 KB
+    payment_type: 116.26 KB
+    pickup_datetime: 2.61 MB
+    pickup_latitude: 1.12 MB
+    pickup_longitude: 975.85 KB
+    rate_code: 31.94 KB
+    store_and_fwd_flag: 42.17 KB
+    surcharge: 118.18 KB
+    tip_amount: 506.94 KB
+    tolls_amount: 66.90 KB
+    total_amount: 731.25 KB
+    trip_distance: 727.78 KB
+    trip_time_in_secs: 775.22 KB
+    vendor_id: 27.64 KB
+Partition: pickup_date=2013-10-04/
+NumModifiedRows: 520937
+  BytesWritten: 17.61 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.62 MB
+    dropoff_latitude: 2.07 MB
+    dropoff_longitude: 1.06 MB
+    fare_amount: 559.27 KB
+    hack_license: 1.71 MB
+    medallion: 1.28 MB
+    mta_tax: 5.58 KB
+    passenger_count: 170.93 KB
+    payment_type: 128.41 KB
+    pickup_datetime: 2.70 MB
+    pickup_latitude: 1.17 MB
+    pickup_longitude: 1021.67 KB
+    rate_code: 31.49 KB
+    store_and_fwd_flag: 59.39 KB
+    surcharge: 140.62 KB
+    tip_amount: 524.30 KB
+    tolls_amount: 66.48 KB
+    total_amount: 767.10 KB
+    trip_distance: 768.89 KB
+    trip_time_in_secs: 805.35 KB
+    vendor_id: 43.29 KB
+Partition: pickup_date=2013-10-05/
+NumModifiedRows: 538444
+  BytesWritten: 18.00 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.70 MB
+    dropoff_latitude: 2.24 MB
+    dropoff_longitude: 1.09 MB
+    fare_amount: 570.45 KB
+    hack_license: 1.71 MB
+    medallion: 1.30 MB
+    mta_tax: 5.10 KB
+    passenger_count: 188.83 KB
+    payment_type: 123.30 KB
+    pickup_datetime: 2.77 MB
+    pickup_latitude: 1.22 MB
+    pickup_longitude: 1.03 MB
+    rate_code: 27.48 KB
+    store_and_fwd_flag: 41.09 KB
+    surcharge: 118.43 KB
+    tip_amount: 489.38 KB
+    tolls_amount: 45.54 KB
+    total_amount: 785.53 KB
+    trip_distance: 788.71 KB
+    trip_time_in_secs: 803.54 KB
+    vendor_id: 27.14 KB
+Partition: pickup_date=2013-10-06/
+NumModifiedRows: 457691
+  BytesWritten: 15.65 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.31 MB
+    dropoff_latitude: 1.91 MB
+    dropoff_longitude: 981.34 KB
+    fare_amount: 497.53 KB
+    hack_license: 1.54 MB
+    medallion: 1.16 MB
+    mta_tax: 6.07 KB
+    passenger_count: 157.76 KB
+    payment_type: 109.70 KB
+    pickup_datetime: 2.36 MB
+    pickup_latitude: 1.06 MB
+    pickup_longitude: 918.04 KB
+    rate_code: 33.83 KB
+    store_and_fwd_flag: 47.85 KB
+    surcharge: 109.94 KB
+    tip_amount: 440.07 KB
+    tolls_amount: 63.30 KB
+    total_amount: 673.79 KB
+    trip_distance: 676.08 KB
+    trip_time_in_secs: 684.28 KB
+    vendor_id: 33.42 KB
+Partition: pickup_date=2013-10-07/
+NumModifiedRows: 426030
+  BytesWritten: 14.29 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.09 MB
+    dropoff_latitude: 1.48 MB
+    dropoff_longitude: 905.04 KB
+    fare_amount: 462.71 KB
+    hack_license: 1.50 MB
+    medallion: 1.12 MB
+    mta_tax: 4.76 KB
+    passenger_count: 134.63 KB
+    payment_type: 109.16 KB
+    pickup_datetime: 2.13 MB
+    pickup_latitude: 998.93 KB
+    pickup_longitude: 848.81 KB
+    rate_code: 29.80 KB
+    store_and_fwd_flag: 50.86 KB
+    surcharge: 132.17 KB
+    tip_amount: 427.37 KB
+    tolls_amount: 60.64 KB
+    total_amount: 626.64 KB
+    trip_distance: 629.49 KB
+    trip_time_in_secs: 652.31 KB
+    vendor_id: 36.51 KB
+Partition: pickup_date=2013-10-08/
+NumModifiedRows: 459784
+  BytesWritten: 15.44 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.33 MB
+    dropoff_latitude: 1.62 MB
+    dropoff_longitude: 962.52 KB
+    fare_amount: 491.83 KB
+    hack_license: 1.59 MB
+    medallion: 1.18 MB
+    mta_tax: 4.59 KB
+    passenger_count: 144.42 KB
+    payment_type: 109.14 KB
+    pickup_datetime: 2.39 MB
+    pickup_latitude: 1.04 MB
+    pickup_longitude: 904.98 KB
+    rate_code: 27.18 KB
+    store_and_fwd_flag: 40.48 KB
+    surcharge: 134.29 KB
+    tip_amount: 464.22 KB
+    tolls_amount: 59.56 KB
+    total_amount: 676.54 KB
+    trip_distance: 673.32 KB
+    trip_time_in_secs: 701.62 KB
+    vendor_id: 26.64 KB
+Partition: pickup_date=2013-10-09/
+NumModifiedRows: 484883
+  BytesWritten: 16.20 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.39 MB
+    dropoff_latitude: 1.84 MB
+    dropoff_longitude: 1010.38 KB
+    fare_amount: 519.60 KB
+    hack_license: 1.64 MB
+    medallion: 1.22 MB
+    mta_tax: 5.02 KB
+    passenger_count: 154.97 KB
+    payment_type: 116.25 KB
+    pickup_datetime: 2.44 MB
+    pickup_latitude: 1.09 MB
+    pickup_longitude: 946.65 KB
+    rate_code: 29.60 KB
+    store_and_fwd_flag: 43.54 KB
+    surcharge: 139.57 KB
+    tip_amount: 496.02 KB
+    tolls_amount: 62.54 KB
+    total_amount: 713.87 KB
+    trip_distance: 715.89 KB
+    trip_time_in_secs: 732.08 KB
+    vendor_id: 33.07 KB
+Partition: pickup_date=2013-10-10/
+NumModifiedRows: 507456
+  BytesWritten: 17.15 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.57 MB
+    dropoff_latitude: 1.95 MB
+    dropoff_longitude: 1.03 MB
+    fare_amount: 552.78 KB
+    hack_license: 1.68 MB
+    medallion: 1.26 MB
+    mta_tax: 5.56 KB
+    passenger_count: 167.81 KB
+    payment_type: 129.86 KB
+    pickup_datetime: 2.63 MB
+    pickup_latitude: 1.14 MB
+    pickup_longitude: 994.41 KB
+    rate_code: 34.04 KB
+    store_and_fwd_flag: 62.28 KB
+    surcharge: 134.10 KB
+    tip_amount: 521.99 KB
+    tolls_amount: 69.31 KB
+    total_amount: 747.67 KB
+    trip_distance: 743.42 KB
+    trip_time_in_secs: 786.68 KB
+    vendor_id: 42.64 KB
+Partition: pickup_date=2013-10-11/
+NumModifiedRows: 516171
+  BytesWritten: 17.66 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.67 MB
+    dropoff_latitude: 1.99 MB
+    dropoff_longitude: 1.05 MB
+    fare_amount: 554.07 KB
+    hack_license: 1.70 MB
+    medallion: 1.27 MB
+    mta_tax: 5.74 KB
+    passenger_count: 174.20 KB
+    payment_type: 143.64 KB
+    pickup_datetime: 2.73 MB
+    pickup_latitude: 1.16 MB
+    pickup_longitude: 1013.10 KB
+    rate_code: 32.89 KB
+    store_and_fwd_flag: 103.00 KB
+    surcharge: 172.47 KB
+    tip_amount: 536.61 KB
+    tolls_amount: 72.12 KB
+    total_amount: 760.58 KB
+    trip_distance: 762.08 KB
+    trip_time_in_secs: 806.44 KB
+    vendor_id: 66.29 KB
+Partition: pickup_date=2013-10-12/
+NumModifiedRows: 524068
+  BytesWritten: 17.84 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.69 MB
+    dropoff_latitude: 2.13 MB
+    dropoff_longitude: 1.07 MB
+    fare_amount: 554.61 KB
+    hack_license: 1.69 MB
+    medallion: 1.28 MB
+    mta_tax: 5.31 KB
+    passenger_count: 185.15 KB
+    payment_type: 145.63 KB
+    pickup_datetime: 2.76 MB
+    pickup_latitude: 1.19 MB
+    pickup_longitude: 1.01 MB
+    rate_code: 29.02 KB
+    store_and_fwd_flag: 91.73 KB
+    surcharge: 131.11 KB
+    tip_amount: 509.56 KB
+    tolls_amount: 61.96 KB
+    total_amount: 771.31 KB
+    trip_distance: 773.61 KB
+    trip_time_in_secs: 796.43 KB
+    vendor_id: 62.29 KB
+Partition: pickup_date=2013-10-13/
+NumModifiedRows: 462766
+  BytesWritten: 15.68 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.29 MB
+    dropoff_latitude: 1.88 MB
+    dropoff_longitude: 987.61 KB
+    fare_amount: 503.11 KB
+    hack_license: 1.54 MB
+    medallion: 1.16 MB
+    mta_tax: 5.71 KB
+    passenger_count: 162.40 KB
+    payment_type: 117.24 KB
+    pickup_datetime: 2.34 MB
+    pickup_latitude: 1.07 MB
+    pickup_longitude: 928.12 KB
+    rate_code: 32.71 KB
+    store_and_fwd_flag: 54.53 KB
+    surcharge: 112.32 KB
+    tip_amount: 446.51 KB
+    tolls_amount: 68.21 KB
+    total_amount: 681.34 KB
+    trip_distance: 683.63 KB
+    trip_time_in_secs: 695.23 KB
+    vendor_id: 42.63 KB
+Partition: pickup_date=2013-10-14/
+NumModifiedRows: 403416
+  BytesWritten: 13.77 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.03 MB
+    dropoff_latitude: 1.46 MB
+    dropoff_longitude: 866.73 KB
+    fare_amount: 437.77 KB
+    hack_license: 1.43 MB
+    medallion: 1.07 MB
+    mta_tax: 4.72 KB
+    passenger_count: 130.79 KB
+    payment_type: 110.20 KB
+    pickup_datetime: 2.07 MB
+    pickup_latitude: 958.82 KB
+    pickup_longitude: 813.85 KB
+    rate_code: 31.17 KB
+    store_and_fwd_flag: 70.10 KB
+    surcharge: 94.67 KB
+    tip_amount: 404.86 KB
+    tolls_amount: 63.67 KB
+    total_amount: 593.32 KB
+    trip_distance: 596.47 KB
+    trip_time_in_secs: 604.61 KB
+    vendor_id: 48.94 KB
+Partition: pickup_date=2013-10-15/
+NumModifiedRows: 430354
+  BytesWritten: 14.28 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.08 MB
+    dropoff_latitude: 1.53 MB
+    dropoff_longitude: 916.35 KB
+    fare_amount: 459.53 KB
+    hack_license: 1.41 MB
+    medallion: 1.11 MB
+    mta_tax: 4.70 KB
+    passenger_count: 136.08 KB
+    payment_type: 105.23 KB
+    pickup_datetime: 2.12 MB
+    pickup_latitude: 1013.73 KB
+    pickup_longitude: 851.39 KB
+    rate_code: 27.93 KB
+    store_and_fwd_flag: 61.86 KB
+    surcharge: 140.62 KB
+    tip_amount: 436.25 KB
+    tolls_amount: 59.48 KB
+    total_amount: 633.31 KB
+    trip_distance: 635.89 KB
+    trip_time_in_secs: 652.27 KB
+    vendor_id: 44.19 KB
+Partition: pickup_date=2013-10-16/
+NumModifiedRows: 477305
+  BytesWritten: 16.22 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.46 MB
+    dropoff_latitude: 1.78 MB
+    dropoff_longitude: 1003.88 KB
+    fare_amount: 511.17 KB
+    hack_license: 1.59 MB
+    medallion: 1.20 MB
+    mta_tax: 4.89 KB
+    passenger_count: 154.85 KB
+    payment_type: 129.17 KB
+    pickup_datetime: 2.52 MB
+    pickup_latitude: 1.08 MB
+    pickup_longitude: 937.83 KB
+    rate_code: 28.97 KB
+    store_and_fwd_flag: 80.79 KB
+    surcharge: 111.19 KB
+    tip_amount: 508.84 KB
+    tolls_amount: 64.05 KB
+    total_amount: 702.62 KB
+    trip_distance: 699.07 KB
+    trip_time_in_secs: 727.27 KB
+    vendor_id: 56.21 KB
+Partition: pickup_date=2013-10-17/
+NumModifiedRows: 506341
+  BytesWritten: 17.16 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.58 MB
+    dropoff_latitude: 1.91 MB
+    dropoff_longitude: 1.03 MB
+    fare_amount: 543.14 KB
+    hack_license: 1.68 MB
+    medallion: 1.26 MB
+    mta_tax: 5.34 KB
+    passenger_count: 164.29 KB
+    payment_type: 130.13 KB
+    pickup_datetime: 2.66 MB
+    pickup_latitude: 1.14 MB
+    pickup_longitude: 992.85 KB
+    rate_code: 32.22 KB
+    store_and_fwd_flag: 77.43 KB
+    surcharge: 161.20 KB
+    tip_amount: 518.45 KB
+    tolls_amount: 68.96 KB
+    total_amount: 739.84 KB
+    trip_distance: 747.57 KB
+    trip_time_in_secs: 790.68 KB
+    vendor_id: 55.97 KB
+Partition: pickup_date=2013-10-18/
+NumModifiedRows: 526590
+  BytesWritten: 17.62 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.62 MB
+    dropoff_latitude: 2.01 MB
+    dropoff_longitude: 1.07 MB
+    fare_amount: 557.48 KB
+    hack_license: 1.72 MB
+    medallion: 1.29 MB
+    mta_tax: 5.41 KB
+    passenger_count: 177.71 KB
+    payment_type: 127.96 KB
+    pickup_datetime: 2.68 MB
+    pickup_latitude: 1.18 MB
+    pickup_longitude: 1.01 MB
+    rate_code: 32.02 KB
+    store_and_fwd_flag: 60.71 KB
+    surcharge: 157.64 KB
+    tip_amount: 529.74 KB
+    tolls_amount: 69.14 KB
+    total_amount: 769.65 KB
+    trip_distance: 777.15 KB
+    trip_time_in_secs: 818.44 KB
+    vendor_id: 45.83 KB
+Partition: pickup_date=2013-10-19/
+NumModifiedRows: 549186
+  BytesWritten: 18.34 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.71 MB
+    dropoff_latitude: 2.30 MB
+    dropoff_longitude: 1.12 MB
+    fare_amount: 582.32 KB
+    hack_license: 1.73 MB
+    medallion: 1.32 MB
+    mta_tax: 5.14 KB
+    passenger_count: 195.04 KB
+    payment_type: 142.09 KB
+    pickup_datetime: 2.76 MB
+    pickup_latitude: 1.24 MB
+    pickup_longitude: 1.06 MB
+    rate_code: 27.94 KB
+    store_and_fwd_flag: 76.43 KB
+    surcharge: 126.15 KB
+    tip_amount: 522.18 KB
+    tolls_amount: 47.45 KB
+    total_amount: 801.89 KB
+    trip_distance: 804.38 KB
+    trip_time_in_secs: 818.71 KB
+    vendor_id: 53.49 KB
+Partition: pickup_date=2013-10-20/
+NumModifiedRows: 473864
+  BytesWritten: 15.95 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.31 MB
+    dropoff_latitude: 1.96 MB
+    dropoff_longitude: 1013.31 KB
+    fare_amount: 507.50 KB
+    hack_license: 1.57 MB
+    medallion: 1.18 MB
+    mta_tax: 6.37 KB
+    passenger_count: 161.53 KB
+    payment_type: 111.01 KB
+    pickup_datetime: 2.36 MB
+    pickup_latitude: 1.09 MB
+    pickup_longitude: 953.52 KB
+    rate_code: 34.95 KB
+    store_and_fwd_flag: 44.04 KB
+    surcharge: 104.19 KB
+    tip_amount: 457.95 KB
+    tolls_amount: 67.20 KB
+    total_amount: 691.92 KB
+    trip_distance: 699.90 KB
+    trip_time_in_secs: 708.26 KB
+    vendor_id: 34.95 KB
+Partition: pickup_date=2013-10-21/
+NumModifiedRows: 435562
+  BytesWritten: 14.82 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.23 MB
+    dropoff_latitude: 1.55 MB
+    dropoff_longitude: 924.89 KB
+    fare_amount: 473.31 KB
+    hack_license: 1.52 MB
+    medallion: 1.13 MB
+    mta_tax: 5.22 KB
+    passenger_count: 138.53 KB
+    payment_type: 111.19 KB
+    pickup_datetime: 2.26 MB
+    pickup_latitude: 1021.91 KB
+    pickup_longitude: 867.39 KB
+    rate_code: 31.62 KB
+    store_and_fwd_flag: 61.52 KB
+    surcharge: 135.25 KB
+    tip_amount: 438.15 KB
+    tolls_amount: 65.54 KB
+    total_amount: 640.97 KB
+    trip_distance: 643.61 KB
+    trip_time_in_secs: 660.77 KB
+    vendor_id: 43.33 KB
+Partition: pickup_date=2013-10-22/
+NumModifiedRows: 466786
+  BytesWritten: 15.51 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.33 MB
+    dropoff_latitude: 1.63 MB
+    dropoff_longitude: 974.83 KB
+    fare_amount: 491.53 KB
+    hack_license: 1.59 MB
+    medallion: 1.19 MB
+    mta_tax: 4.64 KB
+    passenger_count: 146.50 KB
+    payment_type: 109.98 KB
+    pickup_datetime: 2.38 MB
+    pickup_latitude: 1.05 MB
+    pickup_longitude: 912.96 KB
+    rate_code: 27.57 KB
+    store_and_fwd_flag: 36.31 KB
+    surcharge: 139.21 KB
+    tip_amount: 463.18 KB
+    tolls_amount: 58.76 KB
+    total_amount: 686.61 KB
+    trip_distance: 683.53 KB
+    trip_time_in_secs: 698.74 KB
+    vendor_id: 25.48 KB
+Partition: pickup_date=2013-10-23/
+NumModifiedRows: 495387
+  BytesWritten: 16.57 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.46 MB
+    dropoff_latitude: 1.82 MB
+    dropoff_longitude: 1.00 MB
+    fare_amount: 531.12 KB
+    hack_license: 1.66 MB
+    medallion: 1.24 MB
+    mta_tax: 4.85 KB
+    passenger_count: 155.27 KB
+    payment_type: 130.22 KB
+    pickup_datetime: 2.52 MB
+    pickup_latitude: 1.11 MB
+    pickup_longitude: 965.57 KB
+    rate_code: 29.32 KB
+    store_and_fwd_flag: 74.35 KB
+    surcharge: 156.03 KB
+    tip_amount: 508.95 KB
+    tolls_amount: 62.54 KB
+    total_amount: 729.02 KB
+    trip_distance: 731.28 KB
+    trip_time_in_secs: 742.93 KB
+    vendor_id: 51.86 KB
+Partition: pickup_date=2013-10-24/
+NumModifiedRows: 513937
+  BytesWritten: 17.20 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.56 MB
+    dropoff_latitude: 1.94 MB
+    dropoff_longitude: 1.05 MB
+    fare_amount: 551.50 KB
+    hack_license: 1.70 MB
+    medallion: 1.27 MB
+    mta_tax: 5.43 KB
+    passenger_count: 162.18 KB
+    payment_type: 125.59 KB
+    pickup_datetime: 2.63 MB
+    pickup_latitude: 1.15 MB
+    pickup_longitude: 1001.82 KB
+    rate_code: 31.01 KB
+    store_and_fwd_flag: 54.21 KB
+    surcharge: 151.58 KB
+    tip_amount: 519.82 KB
+    tolls_amount: 69.19 KB
+    total_amount: 756.70 KB
+    trip_distance: 752.84 KB
+    trip_time_in_secs: 791.62 KB
+    vendor_id: 38.31 KB
+Partition: pickup_date=2013-10-25/
+NumModifiedRows: 530999
+  BytesWritten: 17.58 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.58 MB
+    dropoff_latitude: 2.02 MB
+    dropoff_longitude: 1.08 MB
+    fare_amount: 570.27 KB
+    hack_license: 1.73 MB
+    medallion: 1.30 MB
+    mta_tax: 5.57 KB
+    passenger_count: 174.92 KB
+    payment_type: 124.42 KB
+    pickup_datetime: 2.63 MB
+    pickup_latitude: 1.19 MB
+    pickup_longitude: 1.02 MB
+    rate_code: 31.91 KB
+    store_and_fwd_flag: 45.47 KB
+    surcharge: 157.75 KB
+    tip_amount: 533.31 KB
+    tolls_amount: 68.26 KB
+    total_amount: 782.23 KB
+    trip_distance: 783.71 KB
+    trip_time_in_secs: 824.76 KB
+    vendor_id: 30.99 KB
+Partition: pickup_date=2013-10-26/
+NumModifiedRows: 536130
+  BytesWritten: 17.74 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.59 MB
+    dropoff_latitude: 2.23 MB
+    dropoff_longitude: 1.09 MB
+    fare_amount: 567.92 KB
+    hack_license: 1.71 MB
+    medallion: 1.29 MB
+    mta_tax: 5.00 KB
+    passenger_count: 188.78 KB
+    payment_type: 119.07 KB
+    pickup_datetime: 2.64 MB
+    pickup_latitude: 1.21 MB
+    pickup_longitude: 1.03 MB
+    rate_code: 27.44 KB
+    store_and_fwd_flag: 35.75 KB
+    surcharge: 116.72 KB
+    tip_amount: 492.06 KB
+    tolls_amount: 44.46 KB
+    total_amount: 788.88 KB
+    trip_distance: 791.53 KB
+    trip_time_in_secs: 832.59 KB
+    vendor_id: 22.34 KB
+Partition: pickup_date=2013-10-27/
+NumModifiedRows: 468421
+  BytesWritten: 16.25 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.41 MB
+    dropoff_latitude: 2.06 MB
+    dropoff_longitude: 1004.25 KB
+    fare_amount: 501.39 KB
+    hack_license: 1.56 MB
+    medallion: 1.17 MB
+    mta_tax: 5.95 KB
+    passenger_count: 161.10 KB
+    payment_type: 120.09 KB
+    pickup_datetime: 2.47 MB
+    pickup_latitude: 1.09 MB
+    pickup_longitude: 945.44 KB
+    rate_code: 33.53 KB
+    store_and_fwd_flag: 54.11 KB
+    surcharge: 110.00 KB
+    tip_amount: 465.47 KB
+    tolls_amount: 63.26 KB
+    total_amount: 689.79 KB
+    trip_distance: 686.54 KB
+    trip_time_in_secs: 724.37 KB
+    vendor_id: 41.55 KB
+Partition: pickup_date=2013-10-28/
+NumModifiedRows: 432200
+  BytesWritten: 14.29 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.10 MB
+    dropoff_latitude: 1.47 MB
+    dropoff_longitude: 912.07 KB
+    fare_amount: 461.46 KB
+    hack_license: 1.51 MB
+    medallion: 1.13 MB
+    mta_tax: 4.61 KB
+    passenger_count: 134.45 KB
+    payment_type: 101.12 KB
+    pickup_datetime: 2.13 MB
+    pickup_latitude: 1010.06 KB
+    pickup_longitude: 860.57 KB
+    rate_code: 28.91 KB
+    store_and_fwd_flag: 37.56 KB
+    surcharge: 108.60 KB
+    tip_amount: 415.68 KB
+    tolls_amount: 62.13 KB
+    total_amount: 635.98 KB
+    trip_distance: 638.60 KB
+    trip_time_in_secs: 649.25 KB
+    vendor_id: 25.29 KB
+Partition: pickup_date=2013-10-29/
+NumModifiedRows: 463945
+  BytesWritten: 15.33 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.24 MB
+    dropoff_latitude: 1.66 MB
+    dropoff_longitude: 969.56 KB
+    fare_amount: 496.40 KB
+    hack_license: 1.59 MB
+    medallion: 1.18 MB
+    mta_tax: 4.50 KB
+    passenger_count: 146.75 KB
+    payment_type: 109.53 KB
+    pickup_datetime: 2.29 MB
+    pickup_latitude: 1.05 MB
+    pickup_longitude: 906.90 KB
+    rate_code: 25.25 KB
+    store_and_fwd_flag: 41.86 KB
+    surcharge: 136.68 KB
+    tip_amount: 469.88 KB
+    tolls_amount: 53.88 KB
+    total_amount: 682.52 KB
+    trip_distance: 679.22 KB
+    trip_time_in_secs: 693.59 KB
+    vendor_id: 30.96 KB
+Partition: pickup_date=2013-10-30/
+NumModifiedRows: 481728
+  BytesWritten: 16.20 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.40 MB
+    dropoff_latitude: 1.83 MB
+    dropoff_longitude: 1009.73 KB
+    fare_amount: 516.04 KB
+    hack_license: 1.63 MB
+    medallion: 1.21 MB
+    mta_tax: 5.20 KB
+    passenger_count: 150.29 KB
+    payment_type: 113.82 KB
+    pickup_datetime: 2.47 MB
+    pickup_latitude: 1.08 MB
+    pickup_longitude: 946.12 KB
+    rate_code: 27.84 KB
+    store_and_fwd_flag: 48.42 KB
+    surcharge: 142.54 KB
+    tip_amount: 496.20 KB
+    tolls_amount: 57.40 KB
+    total_amount: 709.42 KB
+    trip_distance: 705.49 KB
+    trip_time_in_secs: 739.18 KB
+    vendor_id: 32.36 KB
+Partition: pickup_date=2013-10-31/
+NumModifiedRows: 489417
+  BytesWritten: 16.58 MB
+  Per Column Sizes:
+    dropoff_datetime: 2.48 MB
+    dropoff_latitude: 1.82 MB
+    dropoff_longitude: 1.00 MB
+    fare_amount: 524.49 KB
+    hack_license: 1.65 MB
+    medallion: 1.23 MB
+    mta_tax: 4.87 KB
+    passenger_count: 157.46 KB
+    payment_type: 131.86 KB
+    pickup_datetime: 2.55 MB
+    pickup_latitude: 1.11 MB
+    pickup_longitude: 962.42 KB
+    rate_code: 28.39 KB
+    store_and_fwd_flag: 78.20 KB
+    surcharge: 155.41 KB
+    tip_amount: 517.05 KB
+    tolls_amount: 59.03 KB
+    total_amount: 720.51 KB
+    trip_distance: 722.57 KB
+    trip_time_in_secs: 746.60 KB
+    vendor_id: 51.26 KB
+    Per Node Peak Memory Usage: jyu-impala-10.gce.cloudera.com:22000(826.27 MB) jyu-impala-2.gce.cloudera.com:22000(1.18 GB) jyu-impala-3.gce.cloudera.com:22000(642.76 MB) jyu-impala-4.gce.cloudera.com:22000(829.38 MB) jyu-impala-5.gce.cloudera.com:22000(882.95 MB) jyu-impala-6.gce.cloudera.com:22000(588.10 MB) jyu-impala-7.gce.cloudera.com:22000(1.52 GB) jyu-impala-8.gce.cloudera.com:22000(702.55 MB) jyu-impala-9.gce.cloudera.com:22000(602.63 MB) 
+    - FiltersReceived: 0 (0)
+    - FinalizationTimer: 42ms (42003445)
+      - FileDeletionTimer: 5ms (5000410)
+      - FileMoveTimer: 11ms (11000902)
+      - Overwrite/PartitionCreationTimer: 24ms (24001968)
+    - InactiveTotalTime: 0ns (0)
+    - NumBackends: 9 (9)
+    - NumFragmentInstances: 18 (18)
+    - NumFragments: 2 (2)
+    - TotalTime: 35.98s (35977950463)
+    Averaged Fragment F01
+      split sizes:  min: 0, max: 0, avg: 0, stddev: 0
+      completion times: min:19s766ms  max:35s921ms  mean: 25s354ms  stddev:4s710ms
+      execution rates: min:0.00 /sec  max:0.00 /sec  mean:0.00 /sec  stddev:0.00 /sec
+      num instances: 9
+      - AverageThreadTokens: 1.00 (1.0)
+      - BloomFilterBytes: 0 B (0)
+      - InactiveTotalTime: 0ns (0)
+      - PeakMemoryUsage: 568.6 MiB (596268445)
+      - PeakReservation: 564.7 MiB (592095914)
+      - PeakUsedReservation: 0 B (0)
+      - PerHostPeakMemUsage: 870.5 MiB (912804439)
+      - RowsProduced: 1,667,172 (1667172)
+      - TotalNetworkReceiveTime: 16.65s (16651224281)
+      - TotalNetworkSendTime: 0ns (0)
+      - TotalStorageWaitTime: 0ns (0)
+      - TotalThreadsInvoluntaryContextSwitches: 95 (95)
+      - TotalThreadsTotalWallClockTime: 25.33s (25331716877)
+        - TotalThreadsSysTime: 311ms (311206555)
+        - TotalThreadsUserTime: 8.44s (8441256888)
+      - TotalThreadsVoluntaryContextSwitches: 15,534 (15534)
+      - TotalTime: 25.35s (25352607435)
+      Fragment Instance Lifecycle Timings
+        - ExecTime: 5.32s (5319213979)
+          - ExecTreeExecTime: 8ms (8111775)
+        - InactiveTotalTime: 0ns (0)
+        - OpenTime: 20.01s (20012502897)
+          - ExecTreeOpenTime: 19.94s (19943497382)
+        - PrepareTime: 20ms (20890558)
+          - ExecTreePrepareTime: 111.12us (111120)
+        - TotalTime: 0ns (0)
+      HdfsTableSink
+        - BytesWritten: 56.1 MiB (58808869)
+        - CompressTimer: 248ms (248909318)
+        - EncodeTimer: 4.94s (4938293745)
+        - FilesCreated: 3 (3)
+        - FinalizePartitionFileTimer: 333ms (333916394)
+        - HdfsWriteTimer: 287ms (287356942)
+        - InactiveTotalTime: 0ns (0)
+        - PartitionsCreated: 3 (3)
+        - PeakMemoryUsage: 32.4 MiB (33952299)
+        - RowsInserted: 1,667,172 (1667172)
+        - TmpFileCreateTimer: 15ms (15667940)
+        - TotalTime: 5.31s (5309768761)
+      CodeGen
+        - CodegenTime: 1ms (1000080)
+        - CompileTime: 20ms (20779439)
+        - InactiveTotalTime: 0ns (0)
+        - LoadTime: 0ns (0)
+        - ModuleBitcodeSize: 1.9 MiB (1950884)
+        - NumFunctions: 84 (84)
+        - NumInstructions: 1,111 (1111)
+        - OptimizationTime: 46ms (46448155)
+        - PeakMemoryUsage: 555.5 KiB (568832)
+        - PrepareTime: 20ms (20223836)
+        - TotalTime: 88ms (88451512)
+      SORT_NODE (id=2)
+        - InMemorySortTime: 2.03s (2030057829)
+        - InactiveTotalTime: 0ns (0)
+        - InitialRunsCreated: 1 (1)
+        - PeakMemoryUsage: 565.0 MiB (592466933)
+        - RowsReturned: 1,667,172 (1667172)
+        - RowsReturnedRate: 80244 per second (80244)
+        - SortDataSize: 560.8 MiB (587991460)
+        - SpilledRuns: 0 (0)
+        - TotalMergesPerformed: 0 (0)
+        - TotalTime: 19.95s (19950164595)
+        Buffer pool
+          - AllocTime: 7ms (7445085)
+          - CumulativeAllocationBytes: 564.7 MiB (592095914)
+          - CumulativeAllocations: 282 (282)
+          - InactiveTotalTime: 0ns (0)
+          - PeakReservation: 564.7 MiB (592095914)
+          - PeakUnpinnedBytes: 0 B (0)
+          - PeakUsedReservation: 564.7 MiB (592095914)
+          - ReadIoBytes: 0 B (0)
+          - ReadIoOps: 0 (0)
+          - ReadIoWaitTime: 0ns (0)
+          - TotalTime: 0ns (0)
+          - WriteIoBytes: 0 B (0)
+          - WriteIoOps: 0 (0)
+          - WriteIoWaitTime: 0ns (0)
+        EXCHANGE_NODE (id=1)
+          - ConvertRowBatchTime: 33ms (33447189)
+          - InactiveTotalTime: 0ns (0)
+          - PeakMemoryUsage: 0 B (0)
+          - RowsReturned: 1,667,172 (1667172)
+          - RowsReturnedRate: 103273 per second (103273)
+          - TotalTime: 16.70s (16696116844)
+          DataStreamReceiver
+            - BytesReceived: 317.5 MiB (332970596)
+            - DeserializeRowBatchTimer: 671ms (671721846)
+            - FirstBatchArrivalWaitTime: 181ms (181681367)
+            - InactiveTotalTime: 0ns (0)
+            - PeakMemoryUsage: 830.8 KiB (850711)
+            - SendersBlockedTimer: 0ns (0)
+            - SendersBlockedTotalTimer(*): 0ns (0)
+            - TotalTime: 0ns (0)
+    Fragment F01
+      Instance 643bdb2d001170e:746a90a00000010 (host=jyu-impala-7.gce.cloudera.com:22000)
+        - AverageThreadTokens: 1.00 (1.0)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 1.3 GiB (1363127027)
+        - PeakReservation: 1.3 GiB (1358954496)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 1.5 GiB (1628692296)
+        - RowsProduced: 3,844,278 (3844278)
+        - TotalNetworkReceiveTime: 14.72s (14719340000)
+        - TotalNetworkSendTime: 0ns (0)
+        - TotalStorageWaitTime: 0ns (0)
+        - TotalThreadsInvoluntaryContextSwitches: 230 (230)
+        - TotalThreadsTotalWallClockTime: 35.90s (35903268351)
+          - TotalThreadsSysTime: 915ms (915373000)
+          - TotalThreadsUserTime: 20.24s (20244184000)
+        - TotalThreadsVoluntaryContextSwitches: 26,832 (26832)
+        - TotalTime: 35.92s (35920269899)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 11.76s (11756070109)
+            - ExecTreeExecTime: 19ms (19001727)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 24.15s (24147198242)
+            - ExecTreeOpenTime: 24.10s (24100193963)
+          - PrepareTime: 17ms (17001548)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        HdfsTableSink
+          - BytesWritten: 129.9 MiB (136185025)
+          - CompressTimer: 556ms (556050614)
+          - EncodeTimer: 10.88s (10883990733)
+          - FilesCreated: 8 (8)
+          - FinalizePartitionFileTimer: 766ms (766069731)
+          - HdfsWriteTimer: 654ms (654059536)
+          - InactiveTotalTime: 0ns (0)
+          - PartitionsCreated: 8 (8)
+          - PeakMemoryUsage: 32.9 MiB (34539074)
+          - RowsInserted: 3,844,278 (3844278)
+          - TmpFileCreateTimer: 31ms (31002822)
+          - TotalTime: 11.73s (11734068109)
+        CodeGen
+          - CodegenTime: 1ms (1000091)
+          - CompileTime: 14ms (14001274)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 84 (84)
+          - NumInstructions: 1,111 (1111)
+          - OptimizationTime: 32ms (32002914)
+          - PeakMemoryUsage: 555.5 KiB (568832)
+          - PrepareTime: 15ms (15001366)
+          - TotalTime: 62ms (62005645)
+        SORT_NODE (id=2)
+          SortType: Total
+          ExecOption: Codegen Enabled
+          - InMemorySortTime: 6.16s (6156560435)
+          - InactiveTotalTime: 0ns (0)
+          - InitialRunsCreated: 1 (1)
+          - PeakMemoryUsage: 1.3 GiB (1359329939)
+          - RowsReturned: 3,844,278 (3844278)
+          - RowsReturnedRate: 159406 per second (159406)
+          - SortDataSize: 1.3 GiB (1355797457)
+          - SpilledRuns: 0 (0)
+          - TotalMergesPerformed: 0 (0)
+          - TotalTime: 24.12s (24116195417)
+          Buffer pool
+            - AllocTime: 24ms (24002185)
+            - CumulativeAllocationBytes: 1.3 GiB (1358954496)
+            - CumulativeAllocations: 648 (648)
+            - InactiveTotalTime: 0ns (0)
+            - PeakReservation: 1.3 GiB (1358954496)
+            - PeakUnpinnedBytes: 0 B (0)
+            - PeakUsedReservation: 1.3 GiB (1358954496)
+            - ReadIoBytes: 0 B (0)
+            - ReadIoOps: 0 (0)
+            - ReadIoWaitTime: 0ns (0)
+            - TotalTime: 0ns (0)
+            - WriteIoBytes: 0 B (0)
+            - WriteIoOps: 0 (0)
+            - WriteIoWaitTime: 0ns (0)
+          EXCHANGE_NODE (id=1)
+            - ConvertRowBatchTime: 69ms (69006279)
+            - InactiveTotalTime: 0ns (0)
+            - PeakMemoryUsage: 0 B (0)
+            - RowsReturned: 3,844,278 (3844278)
+            - RowsReturnedRate: 259531 per second (259531)
+            - TotalTime: 14.81s (14812348464)
+            DataStreamReceiver
+              - BytesReceived: 735.3 MiB (771011758)
+              - DeserializeRowBatchTimer: 1.57s (1571143023)
+              - FirstBatchArrivalWaitTime: 187ms (187017027)
+              - InactiveTotalTime: 14.38s (14375308686)
+              - PeakMemoryUsage: 2.3 MiB (2451863)
+              - SendersBlockedTimer: 0ns (0)
+              - SendersBlockedTotalTimer(*): 0ns (0)
+              - TotalTime: 0ns (0)
+      Instance 643bdb2d001170e:746a90a0000000e (host=jyu-impala-2.gce.cloudera.com:22000)
+        - AverageThreadTokens: 1.00 (1.0)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 802.0 MiB (840936179)
+        - PeakReservation: 798.0 MiB (836763648)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 1.2 GiB (1265402216)
+        - RowsProduced: 2,363,593 (2363593)
+        - TotalNetworkReceiveTime: 16.11s (16115321525)
+        - TotalNetworkSendTime: 0ns (0)
+        - TotalStorageWaitTime: 0ns (0)
+        - TotalThreadsInvoluntaryContextSwitches: 150 (150)
+        - TotalThreadsTotalWallClockTime: 28.20s (28195312188)
+          - TotalThreadsSysTime: 320ms (320463000)
+          - TotalThreadsUserTime: 11.87s (11874255000)
+        - TotalThreadsVoluntaryContextSwitches: 21,954 (21954)
+        - TotalTime: 28.21s (28211313500)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 7.56s (7564620375)
+            - ExecTreeExecTime: 12ms (12000984)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 20.63s (20630691813)
+            - ExecTreeOpenTime: 20.56s (20559685990)
+          - PrepareTime: 16ms (16001312)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        HdfsTableSink
+          - BytesWritten: 79.6 MiB (83452843)
+          - CompressTimer: 363ms (363029774)
+          - EncodeTimer: 7.08s (7079580598)
+          - FilesCreated: 5 (5)
+          - FinalizePartitionFileTimer: 417ms (417034200)
+          - HdfsWriteTimer: 363ms (363029772)
+          - InactiveTotalTime: 0ns (0)
+          - PartitionsCreated: 5 (5)
+          - PeakMemoryUsage: 32.9 MiB (34538360)
+          - RowsInserted: 2,363,593 (2363593)
+          - TmpFileCreateTimer: 22ms (22001805)
+          - TotalTime: 7.55s (7551619309)
+        CodeGen
+          - CodegenTime: 1ms (1000082)
+          - CompileTime: 22ms (22001804)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 84 (84)
+          - NumInstructions: 1,111 (1111)
+          - OptimizationTime: 48ms (48003937)
+          - PeakMemoryUsage: 555.5 KiB (568832)
+          - PrepareTime: 16ms (16001312)
+          - TotalTime: 86ms (86007053)
+        SORT_NODE (id=2)
+          SortType: Total
+          ExecOption: Codegen Enabled
+          - InMemorySortTime: 2.65s (2647217093)
+          - InactiveTotalTime: 0ns (0)
+          - InitialRunsCreated: 1 (1)
+          - PeakMemoryUsage: 798.4 MiB (837139528)
+          - RowsReturned: 2,363,593 (2363593)
+          - RowsReturnedRate: 114906 per second (114906)
+          - SortDataSize: 795.0 MiB (833600740)
+          - SpilledRuns: 0 (0)
+          - TotalMergesPerformed: 0 (0)
+          - TotalTime: 20.57s (20569686810)
+          Buffer pool
+            - AllocTime: 2ms (2000164)
+            - CumulativeAllocationBytes: 798.0 MiB (836763648)
+            - CumulativeAllocations: 399 (399)
+            - InactiveTotalTime: 0ns (0)
+            - PeakReservation: 798.0 MiB (836763648)
+            - PeakUnpinnedBytes: 0 B (0)
+            - PeakUsedReservation: 798.0 MiB (836763648)
+            - ReadIoBytes: 0 B (0)
+            - ReadIoOps: 0 (0)
+            - ReadIoWaitTime: 0ns (0)
+            - TotalTime: 0ns (0)
+            - WriteIoBytes: 0 B (0)
+            - WriteIoOps: 0 (0)
+            - WriteIoWaitTime: 0ns (0)
+          EXCHANGE_NODE (id=1)
+            - ConvertRowBatchTime: 45ms (45003691)
+            - InactiveTotalTime: 0ns (0)
+            - PeakMemoryUsage: 0 B (0)
+            - RowsReturned: 2,363,593 (2363593)
+            - RowsReturnedRate: 146096 per second (146096)
+            - TotalTime: 16.18s (16178326693)
+            DataStreamReceiver
+              - BytesReceived: 450.3 MiB (472219168)
+              - DeserializeRowBatchTimer: 980ms (980080378)
+              - FirstBatchArrivalWaitTime: 178ms (178014597)
+              - InactiveTotalTime: 16.00s (15998311926)
+              - PeakMemoryUsage: 944.1 KiB (966728)
+              - SendersBlockedTimer: 0ns (0)
+              - SendersBlockedTotalTimer(*): 0ns (0)
+              - TotalTime: 0ns (0)
+      Instance 643bdb2d001170e:746a90a00000009 (host=jyu-impala-5.gce.cloudera.com:22000)
+        - AverageThreadTokens: 1.00 (1.0)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 700.0 MiB (733981427)
+        - PeakReservation: 696.0 MiB (729808896)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 882.9 MiB (925837397)
+        - RowsProduced: 2,059,479 (2059479)
+        - TotalNetworkReceiveTime: 16.30s (16295384579)
+        - TotalNetworkSendTime: 0ns (0)
+        - TotalStorageWaitTime: 0ns (0)
+        - TotalThreadsInvoluntaryContextSwitches: 165 (165)
+        - TotalThreadsTotalWallClockTime: 27.62s (27618346701)
+          - TotalThreadsSysTime: 444ms (444231000)
+          - TotalThreadsUserTime: 10.88s (10882501000)
+        - TotalThreadsVoluntaryContextSwitches: 19,624 (19624)
+        - TotalTime: 27.64s (27640348570)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 7.19s (7193611251)
+            - ExecTreeExecTime: 13ms (13001104)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 20.42s (20424735450)
+            - ExecTreeOpenTime: 20.35s (20352729332)
+          - PrepareTime: 22ms (22001869)
+            - ExecTreePrepareTime: 1ms (1000085)
+          - TotalTime: 0ns (0)
+        HdfsTableSink
+          - BytesWritten: 69.2 MiB (72608819)
+          - CompressTimer: 293ms (293024894)
+          - EncodeTimer: 6.66s (6655565535)
+          - FilesCreated: 4 (4)
+          - FinalizePartitionFileTimer: 479ms (479040704)
+          - HdfsWriteTimer: 397ms (397033735)
+          - InactiveTotalTime: 0ns (0)
+          - PartitionsCreated: 4 (4)
+          - PeakMemoryUsage: 33.9 MiB (35581952)
+          - RowsInserted: 2,059,479 (2059479)
+          - TmpFileCreateTimer: 18ms (18001529)
+          - TotalTime: 7.18s (7179610062)
+        CodeGen
+          - CodegenTime: 1ms (1000085)
+          - CompileTime: 20ms (20001699)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 84 (84)
+          - NumInstructions: 1,111 (1111)
+          - OptimizationTime: 49ms (49004164)
+          - PeakMemoryUsage: 555.5 KiB (568832)
+          - PrepareTime: 22ms (22001869)
+          - TotalTime: 92ms (92007817)
+        SORT_NODE (id=2)
+          SortType: Total
+          ExecOption: Codegen Enabled
+          - InMemorySortTime: 2.44s (2445207770)
+          - InactiveTotalTime: 0ns (0)
+          - InitialRunsCreated: 1 (1)
+          - PeakMemoryUsage: 696.4 MiB (730184310)
+          - RowsReturned: 2,059,479 (2059479)
+          - RowsReturnedRate: 101134 per second (101134)
+          - SortDataSize: 692.7 MiB (726354654)
+          - SpilledRuns: 0 (0)
+          - TotalMergesPerformed: 0 (0)
+          - TotalTime: 20.36s (20363730266)
+          Buffer pool
+            - AllocTime: 4ms (4000340)
+            - CumulativeAllocationBytes: 696.0 MiB (729808896)
+            - CumulativeAllocations: 348 (348)
+            - InactiveTotalTime: 0ns (0)
+            - PeakReservation: 696.0 MiB (729808896)
+            - PeakUnpinnedBytes: 0 B (0)
+            - PeakUsedReservation: 696.0 MiB (729808896)
+            - ReadIoBytes: 0 B (0)
+            - ReadIoOps: 0 (0)
+            - ReadIoWaitTime: 0ns (0)
+            - TotalTime: 0ns (0)
+            - WriteIoBytes: 0 B (0)
+            - WriteIoOps: 0 (0)
+            - WriteIoWaitTime: 0ns (0)
+          EXCHANGE_NODE (id=1)
+            - ConvertRowBatchTime: 43ms (43003656)
+            - InactiveTotalTime: 0ns (0)
+            - PeakMemoryUsage: 0 B (0)
+            - RowsReturned: 2,059,479 (2059479)
+            - RowsReturnedRate: 125989 per second (125989)
+            - TotalTime: 16.35s (16346388915)
+            DataStreamReceiver
+              - BytesReceived: 392.4 MiB (411467800)
+              - DeserializeRowBatchTimer: 824ms (824070021)
+              - FirstBatchArrivalWaitTime: 175ms (175014870)
+              - InactiveTotalTime: 16.22s (16216377862)
+              - PeakMemoryUsage: 726.1 KiB (743508)
+              - SendersBlockedTimer: 0ns (0)
+              - SendersBlockedTotalTimer(*): 0ns (0)
+              - TotalTime: 0ns (0)
+      Instance 643bdb2d001170e:746a90a0000000f (host=jyu-impala-10.gce.cloudera.com:22000)
+        - AverageThreadTokens: 1.00 (1.0)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 648.0 MiB (679455475)
+        - PeakReservation: 644.0 MiB (675282944)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 826.3 MiB (866410223)
+        - RowsProduced: 1,903,227 (1903227)
+        - TotalNetworkReceiveTime: 16.69s (16690375263)
+        - TotalNetworkSendTime: 0ns (0)
+        - TotalStorageWaitTime: 0ns (0)
+        - TotalThreadsInvoluntaryContextSwitches: 102 (102)
+        - TotalThreadsTotalWallClockTime: 25.96s (25958138912)
+          - TotalThreadsSysTime: 291ms (291569000)
+          - TotalThreadsUserTime: 9.14s (9139854000)
+        - TotalThreadsVoluntaryContextSwitches: 18,977 (18977)
+        - TotalTime: 25.98s (25980140725)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 5.82s (5817479361)
+            - ExecTreeExecTime: 8ms (8000658)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 20.14s (20140659551)
+            - ExecTreeOpenTime: 20.07s (20071653866)
+          - PrepareTime: 22ms (22001813)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        HdfsTableSink
+          - BytesWritten: 64.7 MiB (67812766)
+          - CompressTimer: 305ms (305025127)
+          - EncodeTimer: 5.38s (5381443434)
+          - FilesCreated: 4 (4)
+          - FinalizePartitionFileTimer: 386ms (386031809)
+          - HdfsWriteTimer: 351ms (351028926)
+          - InactiveTotalTime: 0ns (0)
+          - PartitionsCreated: 4 (4)
+          - PeakMemoryUsage: 31.9 MiB (33484800)
+          - RowsInserted: 1,903,227 (1903227)
+          - TmpFileCreateTimer: 17ms (17001401)
+          - TotalTime: 5.81s (5808478621)
+        CodeGen
+          - CodegenTime: 1ms (1000083)
+          - CompileTime: 20ms (20001648)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 84 (84)
+          - NumInstructions: 1,111 (1111)
+          - OptimizationTime: 48ms (48003955)
+          - PeakMemoryUsage: 555.5 KiB (568832)
+          - PrepareTime: 20ms (20001648)
+          - TotalTime: 90ms (90007415)
+        SORT_NODE (id=2)
+          SortType: Total
+          ExecOption: Codegen Enabled
+          - InMemorySortTime: 2.15s (2154177503)
+          - InactiveTotalTime: 0ns (0)
+          - InitialRunsCreated: 1 (1)
+          - PeakMemoryUsage: 644.4 MiB (675658937)
+          - RowsReturned: 1,903,227 (1903227)
+          - RowsReturnedRate: 94798 per second (94798)
+          - SortDataSize: 640.2 MiB (671248475)
+          - SpilledRuns: 0 (0)
+          - TotalMergesPerformed: 0 (0)
+          - TotalTime: 20.08s (20076654277)
+          Buffer pool
+            - AllocTime: 3ms (3000248)
+            - CumulativeAllocationBytes: 644.0 MiB (675282944)
+            - CumulativeAllocations: 322 (322)
+            - InactiveTotalTime: 0ns (0)
+            - PeakReservation: 644.0 MiB (675282944)
+            - PeakUnpinnedBytes: 0 B (0)
+            - PeakUsedReservation: 644.0 MiB (675282944)
+            - ReadIoBytes: 0 B (0)
+            - ReadIoOps: 0 (0)
+            - ReadIoWaitTime: 0ns (0)
+            - TotalTime: 0ns (0)
+            - WriteIoBytes: 0 B (0)
+            - WriteIoOps: 0 (0)
+            - WriteIoWaitTime: 0ns (0)
+          EXCHANGE_NODE (id=1)
+            - ConvertRowBatchTime: 41ms (41003379)
+            - InactiveTotalTime: 0ns (0)
+            - PeakMemoryUsage: 0 B (0)
+            - RowsReturned: 1,903,227 (1903227)
+            - RowsReturnedRate: 113650 per second (113650)
+            - TotalTime: 16.75s (16746379877)
+            DataStreamReceiver
+              - BytesReceived: 362.9 MiB (380527148)
+              - DeserializeRowBatchTimer: 736ms (736060675)
+              - FirstBatchArrivalWaitTime: 181ms (181014915)
+              - InactiveTotalTime: 16.62s (16620369503)
+              - PeakMemoryUsage: 846.7 KiB (867009)
+              - SendersBlockedTimer: 0ns (0)
+              - SendersBlockedTotalTimer(*): 0ns (0)
+              - TotalTime: 0ns (0)
+      Instance 643bdb2d001170e:746a90a0000000a (host=jyu-impala-4.gce.cloudera.com:22000)
+        - AverageThreadTokens: 1.00 (1.0)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 646.0 MiB (677358323)
+        - PeakReservation: 642.0 MiB (673185792)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 829.4 MiB (869663171)
+        - RowsProduced: 1,895,183 (1895183)
+        - TotalNetworkReceiveTime: 16.46s (16456087969)
+        - TotalNetworkSendTime: 0ns (0)
+        - TotalStorageWaitTime: 0ns (0)
+        - TotalThreadsInvoluntaryContextSwitches: 82 (82)
+        - TotalThreadsTotalWallClockTime: 25.53s (25527687931)
+          - TotalThreadsSysTime: 322ms (322331000)
+          - TotalThreadsUserTime: 8.84s (8843478000)
+        - TotalThreadsVoluntaryContextSwitches: 18,523 (18523)
+        - TotalTime: 25.55s (25549689385)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 5.48s (5481362546)
+            - ExecTreeExecTime: 9ms (9000595)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 20.05s (20046325385)
+            - ExecTreeOpenTime: 19.98s (19977320824)
+          - PrepareTime: 22ms (22001454)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        HdfsTableSink
+          - BytesWritten: 63.5 MiB (66591209)
+          - CompressTimer: 276ms (276018255)
+          - EncodeTimer: 5.08s (5076335758)
+          - FilesCreated: 4 (4)
+          - FinalizePartitionFileTimer: 349ms (349023084)
+          - HdfsWriteTimer: 307ms (307020306)
+          - InactiveTotalTime: 0ns (0)
+          - PartitionsCreated: 4 (4)
+          - PeakMemoryUsage: 31.9 MiB (33487306)
+          - RowsInserted: 1,895,183 (1895183)
+          - TmpFileCreateTimer: 20ms (20001323)
+          - TotalTime: 5.47s (5471361885)
+        CodeGen
+          - CodegenTime: 1ms (1000066)
+          - CompileTime: 21ms (21001388)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 84 (84)
+          - NumInstructions: 1,111 (1111)
+          - OptimizationTime: 47ms (47003107)
+          - PeakMemoryUsage: 555.5 KiB (568832)
+          - PrepareTime: 20ms (20001322)
+          - TotalTime: 89ms (89005883)
+        SORT_NODE (id=2)
+          SortType: Total
+          ExecOption: Codegen Enabled
+          - InMemorySortTime: 2.06s (2064136510)
+          - InactiveTotalTime: 0ns (0)
+          - InitialRunsCreated: 1 (1)
+          - PeakMemoryUsage: 642.4 MiB (673561609)
+          - RowsReturned: 1,895,183 (1895183)
+          - RowsReturnedRate: 94833 per second (94833)
+          - SortDataSize: 637.5 MiB (668425210)
+          - SpilledRuns: 0 (0)
+          - TotalMergesPerformed: 0 (0)
+          - TotalTime: 19.98s (19984321287)
+          Buffer pool
+            - AllocTime: 6ms (6000397)
+            - CumulativeAllocationBytes: 642.0 MiB (673185792)
+            - CumulativeAllocations: 321 (321)
+            - InactiveTotalTime: 0ns (0)
+            - PeakReservation: 642.0 MiB (673185792)
+            - PeakUnpinnedBytes: 0 B (0)
+            - PeakUsedReservation: 642.0 MiB (673185792)
+            - ReadIoBytes: 0 B (0)
+            - ReadIoOps: 0 (0)
+            - ReadIoWaitTime: 0ns (0)
+            - TotalTime: 0ns (0)
+            - WriteIoBytes: 0 B (0)
+            - WriteIoOps: 0 (0)
+            - WriteIoWaitTime: 0ns (0)
+          EXCHANGE_NODE (id=1)
+            - ConvertRowBatchTime: 34ms (34002252)
+            - InactiveTotalTime: 0ns (0)
+            - PeakMemoryUsage: 0 B (0)
+            - RowsReturned: 1,895,183 (1895183)
+            - RowsReturnedRate: 114845 per second (114845)
+            - TotalTime: 16.50s (16502091015)
+            DataStreamReceiver
+              - BytesReceived: 360.5 MiB (377997272)
+              - DeserializeRowBatchTimer: 767ms (767050713)
+              - FirstBatchArrivalWaitTime: 161ms (161010642)
+              - InactiveTotalTime: 16.36s (16356081354)
+              - PeakMemoryUsage: 992.0 KiB (1015853)
+              - SendersBlockedTimer: 0ns (0)
+              - SendersBlockedTotalTimer(*): 0ns (0)
+              - TotalTime: 0ns (0)
+      Instance 643bdb2d001170e:746a90a0000000d (host=jyu-impala-3.gce.cloudera.com:22000)
+        - AverageThreadTokens: 1.00 (1.0)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 320.0 MiB (335522547)
+        - PeakReservation: 316.0 MiB (331350016)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 642.8 MiB (673980771)
+        - RowsProduced: 926,570 (926570)
+        - TotalNetworkReceiveTime: 17.24s (17244175172)
+        - TotalNetworkSendTime: 0ns (0)
+        - TotalStorageWaitTime: 0ns (0)
+        - TotalThreadsInvoluntaryContextSwitches: 54 (54)
+        - TotalThreadsTotalWallClockTime: 22.77s (22765552401)
+          - TotalThreadsSysTime: 139ms (139194000)
+          - TotalThreadsUserTime: 5.49s (5485162000)
+        - TotalThreadsVoluntaryContextSwitches: 10,520 (10520)
+        - TotalTime: 22.79s (22788553965)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 3.83s (3828261714)
+            - ExecTreeExecTime: 7ms (7000481)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 18.94s (18937290687)
+            - ExecTreeOpenTime: 18.86s (18862285589)
+          - PrepareTime: 23ms (23001564)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        HdfsTableSink
+          - BytesWritten: 31.0 MiB (32457380)
+          - CompressTimer: 159ms (159010873)
+          - EncodeTimer: 3.58s (3584245030)
+          - FilesCreated: 2 (2)
+          - FinalizePartitionFileTimer: 210ms (210014360)
+          - HdfsWriteTimer: 194ms (194013265)
+          - InactiveTotalTime: 0ns (0)
+          - PartitionsCreated: 2 (2)
+          - PeakMemoryUsage: 30.9 MiB (32436224)
+          - RowsInserted: 926,570 (926570)
+          - TmpFileCreateTimer: 11ms (11000752)
+          - TotalTime: 3.82s (3820261165)
+        CodeGen
+          - CodegenTime: 1ms (1000068)
+          - CompileTime: 22ms (22001495)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 84 (84)
+          - NumInstructions: 1,111 (1111)
+          - OptimizationTime: 51ms (51003467)
+          - PeakMemoryUsage: 555.5 KiB (568832)
+          - PrepareTime: 24ms (24001632)
+          - TotalTime: 98ms (98006662)
+        SORT_NODE (id=2)
+          SortType: Total
+          ExecOption: Codegen Enabled
+          - InMemorySortTime: 960ms (960065592)
+          - InactiveTotalTime: 0ns (0)
+          - InitialRunsCreated: 1 (1)
+          - PeakMemoryUsage: 316.3 MiB (331682759)
+          - RowsReturned: 926,570 (926570)
+          - RowsReturnedRate: 49107 per second (49107)
+          - SortDataSize: 311.7 MiB (326795242)
+          - SpilledRuns: 0 (0)
+          - TotalMergesPerformed: 0 (0)
+          - TotalTime: 18.87s (18868286001)
+          Buffer pool
+            - AllocTime: 0ns (0)
+            - CumulativeAllocationBytes: 316.0 MiB (331350016)
+            - CumulativeAllocations: 158 (158)
+            - InactiveTotalTime: 0ns (0)
+            - PeakReservation: 316.0 MiB (331350016)
+            - PeakUnpinnedBytes: 0 B (0)
+            - PeakUsedReservation: 316.0 MiB (331350016)
+            - ReadIoBytes: 0 B (0)
+            - ReadIoOps: 0 (0)
+            - ReadIoWaitTime: 0ns (0)
+            - TotalTime: 0ns (0)
+            - WriteIoBytes: 0 B (0)
+            - WriteIoOps: 0 (0)
+            - WriteIoWaitTime: 0ns (0)
+          EXCHANGE_NODE (id=1)
+            - ConvertRowBatchTime: 25ms (25001703)
+            - InactiveTotalTime: 0ns (0)
+            - PeakMemoryUsage: 0 B (0)
+            - RowsReturned: 926,570 (926570)
+            - RowsReturnedRate: 53614 per second (53614)
+            - TotalTime: 17.28s (17282177759)
+            DataStreamReceiver
+              - BytesReceived: 175.3 MiB (183805071)
+              - DeserializeRowBatchTimer: 424ms (424028874)
+              - FirstBatchArrivalWaitTime: 168ms (168011422)
+              - InactiveTotalTime: 17.20s (17205172517)
+              - PeakMemoryUsage: 435.3 KiB (445763)
+              - SendersBlockedTimer: 0ns (0)
+              - SendersBlockedTotalTimer(*): 0ns (0)
+              - TotalTime: 0ns (0)
+      Instance 643bdb2d001170e:746a90a0000000c (host=jyu-impala-8.gce.cloudera.com:22000)
+        - AverageThreadTokens: 1.00 (1.0)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 352.0 MiB (369076979)
+        - PeakReservation: 348.0 MiB (364904448)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 702.6 MiB (736679460)
+        - RowsProduced: 1,023,327 (1023327)
+        - TotalNetworkReceiveTime: 17.14s (17140513056)
+        - TotalNetworkSendTime: 0ns (0)
+        - TotalStorageWaitTime: 0ns (0)
+        - TotalThreadsInvoluntaryContextSwitches: 36 (36)
+        - TotalThreadsTotalWallClockTime: 21.91s (21915934579)
+          - TotalThreadsSysTime: 241ms (241610000)
+          - TotalThreadsUserTime: 4.58s (4577594000)
+        - TotalThreadsVoluntaryContextSwitches: 11,317 (11317)
+        - TotalTime: 21.94s (21937936521)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 2.92s (2915257331)
+            - ExecTreeExecTime: 4ms (4000354)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 19.00s (19000677248)
+            - ExecTreeOpenTime: 18.93s (18928670892)
+          - PrepareTime: 22ms (22001942)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        HdfsTableSink
+          - BytesWritten: 34.2 MiB (35860826)
+          - CompressTimer: 154ms (154013590)
+          - EncodeTimer: 2.67s (2671235790)
+          - FilesCreated: 2 (2)
+          - FinalizePartitionFileTimer: 219ms (219019333)
+          - HdfsWriteTimer: 160ms (160014125)
+          - InactiveTotalTime: 0ns (0)
+          - PartitionsCreated: 2 (2)
+          - PeakMemoryUsage: 33.9 MiB (35581952)
+          - RowsInserted: 1,023,327 (1023327)
+          - TmpFileCreateTimer: 9ms (9000795)
+          - TotalTime: 2.91s (2909256800)
+        CodeGen
+          - CodegenTime: 1ms (1000088)
+          - CompileTime: 22ms (22001942)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 84 (84)
+          - NumInstructions: 1,111 (1111)
+          - OptimizationTime: 48ms (48004238)
+          - PeakMemoryUsage: 555.5 KiB (568832)
+          - PrepareTime: 21ms (21001854)
+          - TotalTime: 92ms (92008122)
+        SORT_NODE (id=2)
+          SortType: Total
+          ExecOption: Codegen Enabled
+          - InMemorySortTime: 1.02s (1023090310)
+          - InactiveTotalTime: 0ns (0)
+          - InitialRunsCreated: 1 (1)
+          - PeakMemoryUsage: 348.4 MiB (365280464)
+          - RowsReturned: 1,023,327 (1023327)
+          - RowsReturnedRate: 54050 per second (54050)
+          - SortDataSize: 344.2 MiB (360919128)
+          - SpilledRuns: 0 (0)
+          - TotalMergesPerformed: 0 (0)
+          - TotalTime: 18.93s (18932671246)
+          Buffer pool
+            - AllocTime: 13ms (13001149)
+            - CumulativeAllocationBytes: 348.0 MiB (364904448)
+            - CumulativeAllocations: 174 (174)
+            - InactiveTotalTime: 0ns (0)
+            - PeakReservation: 348.0 MiB (364904448)
+            - PeakUnpinnedBytes: 0 B (0)
+            - PeakUsedReservation: 348.0 MiB (364904448)
+            - ReadIoBytes: 0 B (0)
+            - ReadIoOps: 0 (0)
+            - ReadIoWaitTime: 0ns (0)
+            - TotalTime: 0ns (0)
+            - WriteIoBytes: 0 B (0)
+            - WriteIoOps: 0 (0)
+            - WriteIoWaitTime: 0ns (0)
+          EXCHANGE_NODE (id=1)
+            - ConvertRowBatchTime: 21ms (21001859)
+            - InactiveTotalTime: 0ns (0)
+            - PeakMemoryUsage: 0 B (0)
+            - RowsReturned: 1,023,327 (1023327)
+            - RowsReturnedRate: 59601 per second (59601)
+            - TotalTime: 17.17s (17169515622)
+            DataStreamReceiver
+              - BytesReceived: 193.9 MiB (203292041)
+              - DeserializeRowBatchTimer: 410ms (410036204)
+              - FirstBatchArrivalWaitTime: 173ms (173015273)
+              - InactiveTotalTime: 17.11s (17107510147)
+              - PeakMemoryUsage: 556.7 KiB (570100)
+              - SendersBlockedTimer: 0ns (0)
+              - SendersBlockedTotalTimer(*): 0ns (0)
+              - TotalTime: 0ns (0)
+      Instance 643bdb2d001170e:746a90a00000011 (host=jyu-impala-9.gce.cloudera.com:22000)
+        - AverageThreadTokens: 1.00 (1.0)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 190.0 MiB (199207667)
+        - PeakReservation: 186.0 MiB (195035136)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 602.6 MiB (631902882)
+        - RowsProduced: 536,130 (536130)
+        - TotalNetworkReceiveTime: 17.62s (17619318074)
+        - TotalNetworkSendTime: 0ns (0)
+        - TotalStorageWaitTime: 0ns (0)
+        - TotalThreadsInvoluntaryContextSwitches: 21 (21)
+        - TotalThreadsTotalWallClockTime: 20.36s (20358523086)
+          - TotalThreadsSysTime: 65ms (65048000)
+          - TotalThreadsUserTime: 2.79s (2788292000)
+        - TotalThreadsVoluntaryContextSwitches: 6,557 (6557)
+        - TotalTime: 20.38s (20380524731)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 1.92s (1916143430)
+            - ExecTreeExecTime: 1ms (1000075)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 18.44s (18442379656)
+            - ExecTreeOpenTime: 18.37s (18371374347)
+          - PrepareTime: 22ms (22001645)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        HdfsTableSink
+          - BytesWritten: 17.7 MiB (18603693)
+          - CompressTimer: 68ms (68005091)
+          - EncodeTimer: 1.81s (1808135346)
+          - FilesCreated: 1 (1)
+          - FinalizePartitionFileTimer: 92ms (92006888)
+          - HdfsWriteTimer: 81ms (81006064)
+          - InactiveTotalTime: 0ns (0)
+          - PartitionsCreated: 1 (1)
+          - PeakMemoryUsage: 32.9 MiB (34533376)
+          - RowsInserted: 536,130 (536130)
+          - TmpFileCreateTimer: 7ms (7000524)
+          - TotalTime: 1.91s (1913143207)
+        CodeGen
+          - CodegenTime: 1ms (1000075)
+          - CompileTime: 21ms (21001571)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 84 (84)
+          - NumInstructions: 1,111 (1111)
+          - OptimizationTime: 47ms (47003514)
+          - PeakMemoryUsage: 555.5 KiB (568832)
+          - PrepareTime: 22ms (22001645)
+          - TotalTime: 91ms (91006804)
+        SORT_NODE (id=2)
+          SortType: Total
+          ExecOption: Codegen Enabled
+          - InMemorySortTime: 456ms (456034134)
+          - InactiveTotalTime: 0ns (0)
+          - InitialRunsCreated: 1 (1)
+          - PeakMemoryUsage: 186.4 MiB (195411024)
+          - RowsReturned: 536,130 (536130)
+          - RowsReturnedRate: 29181 per second (29181)
+          - SortDataSize: 180.3 MiB (189085289)
+          - SpilledRuns: 0 (0)
+          - TotalMergesPerformed: 0 (0)
+          - TotalTime: 18.37s (18372374422)
+          Buffer pool
+            - AllocTime: 0ns (0)
+            - CumulativeAllocationBytes: 186.0 MiB (195035136)
+            - CumulativeAllocations: 93 (93)
+            - InactiveTotalTime: 0ns (0)
+            - PeakReservation: 186.0 MiB (195035136)
+            - PeakUnpinnedBytes: 0 B (0)
+            - PeakUsedReservation: 186.0 MiB (195035136)
+            - ReadIoBytes: 0 B (0)
+            - ReadIoOps: 0 (0)
+            - ReadIoWaitTime: 0ns (0)
+            - TotalTime: 0ns (0)
+            - WriteIoBytes: 0 B (0)
+            - WriteIoOps: 0 (0)
+            - WriteIoWaitTime: 0ns (0)
+          EXCHANGE_NODE (id=1)
+            - ConvertRowBatchTime: 8ms (8000599)
+            - InactiveTotalTime: 0ns (0)
+            - PeakMemoryUsage: 0 B (0)
+            - RowsReturned: 536,130 (536130)
+            - RowsReturnedRate: 30409 per second (30409)
+            - TotalTime: 17.63s (17630318898)
+            DataStreamReceiver
+              - BytesReceived: 101.3 MiB (106259249)
+              - DeserializeRowBatchTimer: 163ms (163012189)
+              - FirstBatchArrivalWaitTime: 155ms (155011590)
+              - InactiveTotalTime: 17.60s (17602316801)
+              - PeakMemoryUsage: 315.0 KiB (322595)
+              - SendersBlockedTimer: 0ns (0)
+              - SendersBlockedTotalTimer(*): 0ns (0)
+              - TotalTime: 0ns (0)
+      Instance 643bdb2d001170e:746a90a0000000b (host=jyu-impala-6.gce.cloudera.com:22000)
+        - AverageThreadTokens: 1.00 (1.0)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 160.0 MiB (167750387)
+        - PeakReservation: 156.0 MiB (163577856)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 588.1 MiB (616671536)
+        - RowsProduced: 452,769 (452769)
+        - TotalNetworkReceiveTime: 17.58s (17580502897)
+        - TotalNetworkSendTime: 0ns (0)
+        - TotalStorageWaitTime: 0ns (0)
+        - TotalThreadsInvoluntaryContextSwitches: 20 (20)
+        - TotalThreadsTotalWallClockTime: 19.74s (19742687744)
+          - TotalThreadsSysTime: 61ms (61040000)
+          - TotalThreadsUserTime: 2.13s (2135992000)
+        - TotalThreadsVoluntaryContextSwitches: 5,503 (5503)
+        - TotalTime: 19.76s (19764689625)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 1.40s (1400119698)
+            - ExecTreeExecTime: 0ns (0)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 18.34s (18342568046)
+            - ExecTreeOpenTime: 18.27s (18267561635)
+          - PrepareTime: 22ms (22001881)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        HdfsTableSink
+          - BytesWritten: 15.0 MiB (15707264)
+          - CompressTimer: 66ms (66005645)
+          - EncodeTimer: 1.30s (1304111489)
+          - FilesCreated: 1 (1)
+          - FinalizePartitionFileTimer: 87ms (87007438)
+          - HdfsWriteTimer: 79ms (79006754)
+          - InactiveTotalTime: 0ns (0)
+          - PartitionsCreated: 1 (1)
+          - PeakMemoryUsage: 29.9 MiB (31387648)
+          - RowsInserted: 452,769 (452769)
+          - TmpFileCreateTimer: 6ms (6000513)
+          - TotalTime: 1.40s (1400119698)
+        CodeGen
+          - CodegenTime: 1ms (1000086)
+          - CompileTime: 25ms (25002137)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 84 (84)
+          - NumInstructions: 1,111 (1111)
+          - OptimizationTime: 48ms (48004104)
+          - PeakMemoryUsage: 555.5 KiB (568832)
+          - PrepareTime: 22ms (22001881)
+          - TotalTime: 96ms (96008207)
+        SORT_NODE (id=2)
+          SortType: Total
+          ExecOption: Codegen Enabled
+          - InMemorySortTime: 364ms (364031122)
+          - InactiveTotalTime: 0ns (0)
+          - InitialRunsCreated: 1 (1)
+          - PeakMemoryUsage: 156.4 MiB (163953831)
+          - RowsReturned: 452,769 (452769)
+          - RowsReturnedRate: 24785 per second (24785)
+          - SortDataSize: 152.3 MiB (159696947)
+          - SpilledRuns: 0 (0)
+          - TotalMergesPerformed: 0 (0)
+          - TotalTime: 18.27s (18267561635)
+          Buffer pool
+            - AllocTime: 15ms (15001282)
+            - CumulativeAllocationBytes: 156.0 MiB (163577856)
+            - CumulativeAllocations: 78 (78)
+            - InactiveTotalTime: 0ns (0)
+            - PeakReservation: 156.0 MiB (163577856)
+            - PeakUnpinnedBytes: 0 B (0)
+            - PeakUsedReservation: 156.0 MiB (163577856)
+            - ReadIoBytes: 0 B (0)
+            - ReadIoOps: 0 (0)
+            - ReadIoWaitTime: 0ns (0)
+            - TotalTime: 0ns (0)
+            - WriteIoBytes: 0 B (0)
+            - WriteIoOps: 0 (0)
+            - WriteIoWaitTime: 0ns (0)
+          EXCHANGE_NODE (id=1)
+            - ConvertRowBatchTime: 15ms (15001284)
+            - InactiveTotalTime: 0ns (0)
+            - PeakMemoryUsage: 0 B (0)
+            - RowsReturned: 452,769 (452769)
+            - RowsReturnedRate: 25729 per second (25729)
+            - TotalTime: 17.60s (17597504353)
+            DataStreamReceiver
+              - BytesReceived: 86.0 MiB (90155864)
+              - DeserializeRowBatchTimer: 170ms (170014540)
+              - FirstBatchArrivalWaitTime: 257ms (257021971)
+              - InactiveTotalTime: 17.54s (17542499650)
+              - PeakMemoryUsage: 266.6 KiB (272983)
+              - SendersBlockedTimer: 0ns (0)
+              - SendersBlockedTotalTimer(*): 0ns (0)
+              - TotalTime: 0ns (0)
+    Averaged Fragment F00
+      split sizes:  min: 504.47 MB, max: 1008.52 MB, avg: 784.82 MB, stddev: 142.72 MB
+      completion times: min:9s328ms  max:18s007ms  mean: 13s374ms  stddev:2s556ms
+      execution rates: min:42.87 MB/sec  max:81.08 MB/sec  mean:59.60 MB/sec  stddev:10.33 MB/sec
+      num instances: 9
+      - AverageThreadTokens: 2.85 (2.8484934678702056)
+      - BloomFilterBytes: 0 B (0)
+      - InactiveTotalTime: 0ns (0)
+      - PeakMemoryUsage: 570.0 MiB (597716347)
+      - PeakReservation: 0 B (0)
+      - PeakUsedReservation: 0 B (0)
+      - PerHostPeakMemUsage: 870.5 MiB (912804439)
+      - RowsProduced: 1,667,172 (1667172)
+      - TotalNetworkReceiveTime: 0ns (0)
+      - TotalNetworkSendTime: 9.09s (9088400473)
+      - TotalStorageWaitTime: 392ms (392920956)
+      - TotalThreadsInvoluntaryContextSwitches: 217 (217)
+      - TotalThreadsTotalWallClockTime: 38.05s (38050855584)
+        - TotalThreadsSysTime: 816ms (816548444)
+        - TotalThreadsUserTime: 10.28s (10284986777)
+      - TotalThreadsVoluntaryContextSwitches: 10,426 (10426)
+      - TotalTime: 13.37s (13371967787)
+      Fragment Instance Lifecycle Timings
+        - ExecTime: 13.16s (13162395447)
+          - ExecTreeExecTime: 150ms (150901179)
+        - InactiveTotalTime: 0ns (0)
+        - OpenTime: 184ms (184459218)
+          - ExecTreeOpenTime: 0ns (0)
+        - PrepareTime: 25ms (25113121)
+          - ExecTreePrepareTime: 222.24us (222240)
+        - TotalTime: 0ns (0)
+      DataStreamSender (dst_id=1)
+        - BytesSent: 317.5 MiB (332970596)
+        - InactiveTotalTime: 0ns (0)
+        - NetworkThroughput(*): 818.1 MiB/s (857815140)
+        - OverallThroughput: 120.4 MiB/s (126197780)
+        - PeakMemoryUsage: 285.2 KiB (292048)
+        - RowsReturned: 1,667,172 (1667172)
+        - SerializeBatchTime: 2.26s (2257181906)
+        - TotalTime: 2.65s (2648657850)
+        - TransmitDataRPCTime: 389ms (389031313)
+        - UncompressedRowBatchSize: 532.1 MiB (557982348)
+      CodeGen
+        - CodegenTime: 5ms (5556000)
+        - CompileTime: 31ms (31224727)
+        - InactiveTotalTime: 0ns (0)
+        - LoadTime: 0ns (0)
+        - ModuleBitcodeSize: 1.9 MiB (1950884)
+        - NumFunctions: 158 (158)
+        - NumInstructions: 2,707 (2707)
+        - OptimizationTime: 151ms (151901053)
+        - PeakMemoryUsage: 1.3 MiB (1385984)
+        - PrepareTime: 22ms (22779599)
+        - TotalTime: 206ms (206683218)
+      HDFS_SCAN_NODE (id=0)
+        - AverageHdfsReadThreadConcurrency: 0.05 (0.045731881687259265)
+        - AverageScannerThreadConcurrency: 1.87 (1.8710578767787007)
+        - BytesRead: 785.1 MiB (823253150)
+        - BytesReadDataNodeCache: 0 B (0)
+        - BytesReadLocal: 785.1 MiB (823253150)
+        - BytesReadRemoteUnexpected: 0 B (0)
+        - BytesReadShortCircuit: 785.1 MiB (823253150)
+        - CachedFileHandlesHitCount: 0 (0)
+        - CachedFileHandlesMissCount: 70 (70)
+        - CollectionItemsRead: 0 (0)
+        - DecompressionTime: 1.80s (1800479743)
+        - InactiveTotalTime: 0ns (0)
+        - MaxCompressedTextFileLength: 0 B (0)
+        - NumColumns: 21 (21)
+        - NumDictFilteredRowGroups: 0 (0)
+        - NumDisksAccessed: 1 (1)
+        - NumRowGroups: 3 (3)
+        - NumScannerThreadsStarted: 2 (2)
+        - NumScannersWithNoReads: 0 (0)
+        - NumStatsFilteredRowGroups: 0 (0)
+        - PeakMemoryUsage: 567.2 MiB (594754630)
+        - PerReadThreadRawHdfsThroughput: 1.7 GiB/s (1841587004)
+        - RemoteScanRanges: 0 (0)
+        - RowBatchQueueGetWaitTime: 138ms (138011253)
+        - RowBatchQueuePutWaitTime: 17.34s (17345404751)
+        - RowsRead: 19,242,787 (19242787)
+        - RowsReturned: 1,667,172 (1667172)
+        - RowsReturnedRate: 16399841 per second (16399841)
+        - ScanRangesComplete: 3 (3)
+        - ScannerThreadsInvoluntaryContextSwitches: 208 (208)
+        - ScannerThreadsTotalWallClockTime: 24.70s (24704000917)
+          - MaterializeTupleTime(*): 4.96s (4958512069)
+          - ScannerThreadsSysTime: 505ms (505104555)
+          - ScannerThreadsUserTime: 6.24s (6240947888)
+        - ScannerThreadsVoluntaryContextSwitches: 1,646 (1646)
+        - TotalRawHdfsReadTime(*): 448ms (448703062)
+        - TotalReadThroughput: 59.4 MiB/s (62303969)
+        - TotalTime: 148ms (148456540)
+    Fragment F00
+      Instance 643bdb2d001170e:746a90a00000005 (host=jyu-impala-2.gce.cloudera.com:22000)
+        Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:4/1008.50 MB 
+        - AverageThreadTokens: 2.92 (2.9166666666666665)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 571.4 MiB (599132493)
+        - PeakReservation: 0 B (0)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 1.2 GiB (1265402216)
+        - RowsProduced: 2,247,945 (2247945)
+        - TotalNetworkReceiveTime: 0ns (0)
+        - TotalNetworkSendTime: 12.26s (12256005033)
+        - TotalStorageWaitTime: 534ms (534043793)
+        - TotalThreadsInvoluntaryContextSwitches: 224 (224)
+        - TotalThreadsTotalWallClockTime: 52.35s (52350292938)
+          - TotalThreadsSysTime: 866ms (866450000)
+          - TotalThreadsUserTime: 13.51s (13512637000)
+        - TotalThreadsVoluntaryContextSwitches: 18,078 (18078)
+        - TotalTime: 17.99s (17992475458)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 17.79s (17785458482)
+            - ExecTreeExecTime: 205ms (205016812)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 180ms (180014761)
+            - ExecTreeOpenTime: 0ns (0)
+          - PrepareTime: 27ms (27002215)
+            - ExecTreePrepareTime: 1ms (1000082)
+          - TotalTime: 0ns (0)
+        DataStreamSender (dst_id=1)
+          - BytesSent: 427.0 MiB (447701130)
+          - InactiveTotalTime: 0ns (0)
+          - NetworkThroughput(*): 843.7 MiB/s (884712290)
+          - OverallThroughput: 116.7 MiB/s (122346110)
+          - PeakMemoryUsage: 285.2 KiB (292048)
+          - RowsReturned: 2,247,945 (2247945)
+          - SerializeBatchTime: 3.15s (3151258413)
+          - TotalTime: 3.66s (3659300072)
+          - TransmitDataRPCTime: 506ms (506041495)
+          - UncompressedRowBatchSize: 717.2 MiB (752068196)
+        CodeGen
+          - CodegenTime: 6ms (6000492)
+          - CompileTime: 31ms (31002542)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 158 (158)
+          - NumInstructions: 2,707 (2707)
+          - OptimizationTime: 148ms (148012137)
+          - PeakMemoryUsage: 1.3 MiB (1385984)
+          - PrepareTime: 23ms (23001887)
+          - TotalTime: 203ms (203016648)
+        HDFS_SCAN_NODE (id=0)
+          Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:4/1008.50 MB 
+          ExecOption: PARQUET Codegen Enabled, Codegen enabled: 4 out of 4
+          Hdfs Read Thread Concurrency Bucket: 0:100% 1:0% 2:0% 3:0% 4:0% 
+          File Formats: PARQUET/SNAPPY:4 
+          - AverageHdfsReadThreadConcurrency: 0.00 (0.0)
+          - AverageScannerThreadConcurrency: 1.92 (1.9166666666666667)
+          - BytesRead: 1,008.9 MiB (1057877160)
+          - BytesReadDataNodeCache: 0 B (0)
+          - BytesReadLocal: 1,008.9 MiB (1057877160)
+          - BytesReadRemoteUnexpected: 0 B (0)
+          - BytesReadShortCircuit: 1,008.9 MiB (1057877160)
+          - CachedFileHandlesHitCount: 0 (0)
+          - CachedFileHandlesMissCount: 88 (88)
+          - CollectionItemsRead: 0 (0)
+          - DecompressionTime: 2.43s (2426198968)
+          - InactiveTotalTime: 0ns (0)
+          - MaxCompressedTextFileLength: 0 B (0)
+          - NumColumns: 21 (21)
+          - NumDictFilteredRowGroups: 0 (0)
+          - NumDisksAccessed: 1 (1)
+          - NumRowGroups: 4 (4)
+          - NumScannerThreadsStarted: 2 (2)
+          - NumScannersWithNoReads: 0 (0)
+          - NumStatsFilteredRowGroups: 0 (0)
+          - PeakMemoryUsage: 567.5 MiB (595034380)
+          - PerReadThreadRawHdfsThroughput: 1.6 GiB/s (1725596113)
+          - RemoteScanRanges: 0 (0)
+          - RowBatchQueueGetWaitTime: 185ms (185015172)
+          - RowBatchQueuePutWaitTime: 24.92s (24922043709)
+          - RowsRead: 24,651,376 (24651376)
+          - RowsReturned: 2,247,945 (2247945)
+          - RowsReturnedRate: 11127528 per second (11127528)
+          - ScanRangesComplete: 4 (4)
+          - ScannerThreadsInvoluntaryContextSwitches: 216 (216)
+          - ScannerThreadsTotalWallClockTime: 34.38s (34384819695)
+            - MaterializeTupleTime(*): 6.22s (6225510509)
+            - ScannerThreadsSysTime: 474ms (474040000)
+            - ScannerThreadsUserTime: 8.10s (8098486000)
+          - ScannerThreadsVoluntaryContextSwitches: 2,230 (2230)
+          - TotalRawHdfsReadTime(*): 613ms (613050268)
+          - TotalReadThroughput: 56.0 MiB/s (58738320)
+          - TotalTime: 202ms (202016566)
+      Instance 643bdb2d001170e:746a90a00000007 (host=jyu-impala-7.gce.cloudera.com:22000)
+        Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:4/1008.52 MB 
+        - AverageThreadTokens: 3.00 (3.0)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 550.8 MiB (577606911)
+        - PeakReservation: 0 B (0)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 1.5 GiB (1628692296)
+        - RowsProduced: 2,067,316 (2067316)
+        - TotalNetworkReceiveTime: 0ns (0)
+        - TotalNetworkSendTime: 10.97s (10975999237)
+        - TotalStorageWaitTime: 461ms (461041972)
+        - TotalThreadsInvoluntaryContextSwitches: 271 (271)
+        - TotalThreadsTotalWallClockTime: 48.00s (47998369631)
+          - TotalThreadsSysTime: 840ms (840863000)
+          - TotalThreadsUserTime: 12.98s (12980279000)
+        - TotalThreadsVoluntaryContextSwitches: 13,405 (13405)
+        - TotalTime: 16.24s (16241478577)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 16.06s (16064462461)
+            - ExecTreeExecTime: 96ms (96008741)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 157ms (157014295)
+            - ExecTreeOpenTime: 0ns (0)
+          - PrepareTime: 20ms (20001821)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        DataStreamSender (dst_id=1)
+          - BytesSent: 390.5 MiB (409509723)
+          - InactiveTotalTime: 0ns (0)
+          - NetworkThroughput(*): 818.7 MiB/s (858432799)
+          - OverallThroughput: 118.0 MiB/s (123745072)
+          - PeakMemoryUsage: 285.2 KiB (292048)
+          - RowsReturned: 2,067,316 (2067316)
+          - SerializeBatchTime: 2.83s (2829257541)
+          - TotalTime: 3.31s (3309301239)
+          - TransmitDataRPCTime: 477ms (477043425)
+          - UncompressedRowBatchSize: 660.0 MiB (692031232)
+        CodeGen
+          - CodegenTime: 4ms (4000364)
+          - CompileTime: 30ms (30002731)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 158 (158)
+          - NumInstructions: 2,707 (2707)
+          - OptimizationTime: 127ms (127011564)
+          - PeakMemoryUsage: 1.3 MiB (1385984)
+          - PrepareTime: 16ms (16001457)
+          - TotalTime: 173ms (173015752)
+        HDFS_SCAN_NODE (id=0)
+          Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:4/1008.52 MB 
+          ExecOption: PARQUET Codegen Enabled, Codegen enabled: 4 out of 4
+          Hdfs Read Thread Concurrency Bucket: 0:93.75% 1:6.25% 2:0% 3:0% 4:0% 
+          File Formats: PARQUET/SNAPPY:4 
+          - AverageHdfsReadThreadConcurrency: 0.06 (0.0625)
+          - AverageScannerThreadConcurrency: 2.00 (2.0)
+          - BytesRead: 1,008.9 MiB (1057897782)
+          - BytesReadDataNodeCache: 0 B (0)
+          - BytesReadLocal: 1,008.9 MiB (1057897782)
+          - BytesReadRemoteUnexpected: 0 B (0)
+          - BytesReadShortCircuit: 1,008.9 MiB (1057897782)
+          - CachedFileHandlesHitCount: 0 (0)
+          - CachedFileHandlesMissCount: 88 (88)
+          - CollectionItemsRead: 0 (0)
+          - DecompressionTime: 2.37s (2365215317)
+          - InactiveTotalTime: 0ns (0)
+          - MaxCompressedTextFileLength: 0 B (0)
+          - NumColumns: 21 (21)
+          - NumDictFilteredRowGroups: 0 (0)
+          - NumDisksAccessed: 1 (1)
+          - NumRowGroups: 4 (4)
+          - NumScannerThreadsStarted: 2 (2)
+          - NumScannersWithNoReads: 0 (0)
+          - NumStatsFilteredRowGroups: 0 (0)
+          - PeakMemoryUsage: 547.4 MiB (573975632)
+          - PerReadThreadRawHdfsThroughput: 1.8 GiB/s (1923275407)
+          - RemoteScanRanges: 0 (0)
+          - RowBatchQueueGetWaitTime: 86ms (86007830)
+          - RowBatchQueuePutWaitTime: 22.47s (22467045326)
+          - RowsRead: 25,051,559 (25051559)
+          - RowsReturned: 2,067,316 (2067316)
+          - RowsReturnedRate: 21990721 per second (21990721)
+          - ScanRangesComplete: 4 (4)
+          - ScannerThreadsInvoluntaryContextSwitches: 264 (264)
+          - ScannerThreadsTotalWallClockTime: 31.78s (31776892875)
+            - MaterializeTupleTime(*): 6.23s (6232567406)
+            - ScannerThreadsSysTime: 524ms (524178000)
+            - ScannerThreadsUserTime: 8.00s (8004778000)
+          - ScannerThreadsVoluntaryContextSwitches: 2,095 (2095)
+          - TotalRawHdfsReadTime(*): 550ms (550050075)
+          - TotalReadThroughput: 63.0 MiB/s (66093826)
+          - TotalTime: 94ms (94008559)
+      Instance 643bdb2d001170e:746a90a00000001 (host=jyu-impala-4.gce.cloudera.com:22000)
+        Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:3/756.54 MB 
+        - AverageThreadTokens: 2.61 (2.6129032258064515)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 599.3 MiB (628399053)
+        - PeakReservation: 0 B (0)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 829.4 MiB (869663171)
+        - RowsProduced: 2,016,646 (2016646)
+        - TotalNetworkReceiveTime: 0ns (0)
+        - TotalNetworkSendTime: 10.24s (10243677262)
+        - TotalStorageWaitTime: 320ms (320021155)
+        - TotalThreadsInvoluntaryContextSwitches: 88 (88)
+        - TotalThreadsTotalWallClockTime: 40.78s (40785696348)
+          - TotalThreadsSysTime: 889ms (889355000)
+          - TotalThreadsUserTime: 10.85s (10848213000)
+        - TotalThreadsVoluntaryContextSwitches: 11,507 (11507)
+        - TotalTime: 15.21s (15209005485)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 15.00s (14998991604)
+            - ExecTreeExecTime: 93ms (93006149)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 185ms (185012229)
+            - ExecTreeOpenTime: 0ns (0)
+          - PrepareTime: 25ms (25001652)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        DataStreamSender (dst_id=1)
+          - BytesSent: 384.7 MiB (403371291)
+          - InactiveTotalTime: 0ns (0)
+          - NetworkThroughput(*): 793.1 MiB/s (831638378)
+          - OverallThroughput: 120.7 MiB/s (126599066)
+          - PeakMemoryUsage: 285.2 KiB (292048)
+          - RowsReturned: 2,016,646 (2016646)
+          - SerializeBatchTime: 2.69s (2695178150)
+          - TotalTime: 3.19s (3186210625)
+          - TransmitDataRPCTime: 485ms (485032078)
+          - UncompressedRowBatchSize: 643.7 MiB (674976254)
+        CodeGen
+          - CodegenTime: 5ms (5000330)
+          - CompileTime: 31ms (31002049)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 158 (158)
+          - NumInstructions: 2,707 (2707)
+          - OptimizationTime: 153ms (153010114)
+          - PeakMemoryUsage: 1.3 MiB (1385984)
+          - PrepareTime: 22ms (22001454)
+          - TotalTime: 207ms (207013683)
+        HDFS_SCAN_NODE (id=0)
+          Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:3/756.54 MB 
+          ExecOption: PARQUET Codegen Enabled, Codegen enabled: 3 out of 3
+          Hdfs Read Thread Concurrency Bucket: 0:100% 1:0% 2:0% 3:0% 4:0% 
+          File Formats: PARQUET/SNAPPY:3 
+          - AverageHdfsReadThreadConcurrency: 0.00 (0.0)
+          - AverageScannerThreadConcurrency: 1.67 (1.6666666666666667)
+          - BytesRead: 756.8 MiB (793586758)
+          - BytesReadDataNodeCache: 0 B (0)
+          - BytesReadLocal: 756.8 MiB (793586758)
+          - BytesReadRemoteUnexpected: 0 B (0)
+          - BytesReadShortCircuit: 756.8 MiB (793586758)
+          - CachedFileHandlesHitCount: 0 (0)
+          - CachedFileHandlesMissCount: 66 (66)
+          - CollectionItemsRead: 0 (0)
+          - DecompressionTime: 1.58s (1584104752)
+          - InactiveTotalTime: 0ns (0)
+          - MaxCompressedTextFileLength: 0 B (0)
+          - NumColumns: 21 (21)
+          - NumDictFilteredRowGroups: 0 (0)
+          - NumDisksAccessed: 1 (1)
+          - NumRowGroups: 3 (3)
+          - NumScannerThreadsStarted: 2 (2)
+          - NumScannersWithNoReads: 0 (0)
+          - NumStatsFilteredRowGroups: 0 (0)
+          - PeakMemoryUsage: 596.2 MiB (625187876)
+          - PerReadThreadRawHdfsThroughput: 1.8 GiB/s (1880413011)
+          - RemoteScanRanges: 0 (0)
+          - RowBatchQueueGetWaitTime: 80ms (80005288)
+          - RowBatchQueuePutWaitTime: 18.56s (18560226983)
+          - RowsRead: 18,296,068 (18296068)
+          - RowsReturned: 2,016,646 (2016646)
+          - RowsReturnedRate: 23178306 per second (23178306)
+          - ScanRangesComplete: 3 (3)
+          - ScannerThreadsInvoluntaryContextSwitches: 79 (79)
+          - ScannerThreadsTotalWallClockTime: 25.60s (25601692515)
+            - MaterializeTupleTime(*): 4.95s (4945326931)
+            - ScannerThreadsSysTime: 532ms (532842000)
+            - ScannerThreadsUserTime: 6.04s (6045179000)
+          - ScannerThreadsVoluntaryContextSwitches: 1,974 (1974)
+          - TotalRawHdfsReadTime(*): 422ms (422027902)
+          - TotalReadThroughput: 48.8 MiB/s (51143053)
+          - TotalTime: 87ms (87005751)
+      Instance 643bdb2d001170e:746a90a00000002 (host=jyu-impala-6.gce.cloudera.com:22000)
+        Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:3/756.44 MB 
+        - AverageThreadTokens: 2.89 (2.888888888888889)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 518.2 MiB (543355236)
+        - PeakReservation: 0 B (0)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 588.1 MiB (616671536)
+        - RowsProduced: 1,763,712 (1763712)
+        - TotalNetworkReceiveTime: 0ns (0)
+        - TotalNetworkSendTime: 9.13s (9131780623)
+        - TotalStorageWaitTime: 381ms (381032573)
+        - TotalThreadsInvoluntaryContextSwitches: 187 (187)
+        - TotalThreadsTotalWallClockTime: 38.98s (38975331827)
+          - TotalThreadsSysTime: 681ms (681472000)
+          - TotalThreadsUserTime: 9.89s (9887694000)
+        - TotalThreadsVoluntaryContextSwitches: 8,922 (8922)
+        - TotalTime: 13.37s (13369142869)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 13.15s (13153124403)
+            - ExecTreeExecTime: 186ms (186015900)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 190ms (190016243)
+            - ExecTreeOpenTime: 0ns (0)
+          - PrepareTime: 26ms (26002223)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        DataStreamSender (dst_id=1)
+          - BytesSent: 333.2 MiB (349429652)
+          - InactiveTotalTime: 0ns (0)
+          - NetworkThroughput(*): 793.4 MiB/s (831904253)
+          - OverallThroughput: 124.8 MiB/s (130812347)
+          - PeakMemoryUsage: 285.2 KiB (292048)
+          - RowsReturned: 1,763,712 (1763712)
+          - SerializeBatchTime: 2.25s (2250192362)
+          - TotalTime: 2.67s (2671228348)
+          - TransmitDataRPCTime: 420ms (420035900)
+          - UncompressedRowBatchSize: 563.2 MiB (590605419)
+        CodeGen
+          - CodegenTime: 6ms (6000513)
+          - CompileTime: 31ms (31002650)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 158 (158)
+          - NumInstructions: 2,707 (2707)
+          - OptimizationTime: 158ms (158013508)
+          - PeakMemoryUsage: 1.3 MiB (1385984)
+          - PrepareTime: 23ms (23001965)
+          - TotalTime: 212ms (212018123)
+        HDFS_SCAN_NODE (id=0)
+          Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:3/756.44 MB 
+          ExecOption: PARQUET Codegen Enabled, Codegen enabled: 3 out of 3
+          Hdfs Read Thread Concurrency Bucket: 0:96.15% 1:3.846% 2:0% 3:0% 4:0% 
+          File Formats: PARQUET/SNAPPY:3 
+          - AverageHdfsReadThreadConcurrency: 0.04 (0.038461538461538464)
+          - AverageScannerThreadConcurrency: 1.96 (1.9615384615384615)
+          - BytesRead: 756.7 MiB (793474859)
+          - BytesReadDataNodeCache: 0 B (0)
+          - BytesReadLocal: 756.7 MiB (793474859)
+          - BytesReadRemoteUnexpected: 0 B (0)
+          - BytesReadShortCircuit: 756.7 MiB (793474859)
+          - CachedFileHandlesHitCount: 0 (0)
+          - CachedFileHandlesMissCount: 66 (66)
+          - CollectionItemsRead: 0 (0)
+          - DecompressionTime: 1.49s (1492127571)
+          - InactiveTotalTime: 0ns (0)
+          - MaxCompressedTextFileLength: 0 B (0)
+          - NumColumns: 21 (21)
+          - NumDictFilteredRowGroups: 0 (0)
+          - NumDisksAccessed: 1 (1)
+          - NumRowGroups: 3 (3)
+          - NumScannerThreadsStarted: 2 (2)
+          - NumScannersWithNoReads: 0 (0)
+          - NumStatsFilteredRowGroups: 0 (0)
+          - PeakMemoryUsage: 515.8 MiB (540877762)
+          - PerReadThreadRawHdfsThroughput: 1.6 GiB/s (1724797867)
+          - RemoteScanRanges: 0 (0)
+          - RowBatchQueueGetWaitTime: 170ms (170014533)
+          - RowBatchQueuePutWaitTime: 19.00s (18995623857)
+          - RowsRead: 19,088,558 (19088558)
+          - RowsReturned: 1,763,712 (1763712)
+          - RowsReturnedRate: 9689896 per second (9689896)
+          - ScanRangesComplete: 3 (3)
+          - ScannerThreadsInvoluntaryContextSwitches: 178 (178)
+          - ScannerThreadsTotalWallClockTime: 25.63s (25632191181)
+            - MaterializeTupleTime(*): 4.57s (4568390506)
+            - ScannerThreadsSysTime: 386ms (386355000)
+            - ScannerThreadsUserTime: 5.77s (5767805000)
+          - ScannerThreadsVoluntaryContextSwitches: 1,762 (1762)
+          - TotalRawHdfsReadTime(*): 460ms (460039332)
+          - TotalReadThroughput: 56.0 MiB/s (58728062)
+          - TotalTime: 182ms (182015558)
+      Instance 643bdb2d001170e:746a90a00000000 (host=jyu-impala-5.gce.cloudera.com:22000)
+        Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:3/756.39 MB 
+        - AverageThreadTokens: 2.85 (2.8461538461538463)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 595.6 MiB (624498336)
+        - PeakReservation: 0 B (0)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 882.9 MiB (925837397)
+        - RowsProduced: 1,614,008 (1614008)
+        - TotalNetworkReceiveTime: 0ns (0)
+        - TotalNetworkSendTime: 8.52s (8518723806)
+        - TotalStorageWaitTime: 462ms (462039259)
+        - TotalThreadsInvoluntaryContextSwitches: 297 (297)
+        - TotalThreadsTotalWallClockTime: 36.68s (36678116431)
+          - TotalThreadsSysTime: 1.01s (1012519000)
+          - TotalThreadsUserTime: 10.27s (10274590000)
+        - TotalThreadsVoluntaryContextSwitches: 8,872 (8872)
+        - TotalTime: 13.10s (13102113248)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 12.89s (12888095064)
+            - ExecTreeExecTime: 422ms (422035862)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 189ms (189016060)
+            - ExecTreeOpenTime: 0ns (0)
+          - PrepareTime: 25ms (25002124)
+            - ExecTreePrepareTime: 1ms (1000085)
+          - TotalTime: 0ns (0)
+        DataStreamSender (dst_id=1)
+          - BytesSent: 310.1 MiB (325170300)
+          - InactiveTotalTime: 0ns (0)
+          - NetworkThroughput(*): 813.9 MiB/s (853392836)
+          - OverallThroughput: 116.8 MiB/s (122464282)
+          - PeakMemoryUsage: 285.2 KiB (292048)
+          - RowsReturned: 1,614,008 (1614008)
+          - SerializeBatchTime: 2.27s (2273193149)
+          - TotalTime: 2.65s (2655225610)
+          - TransmitDataRPCTime: 381ms (381032376)
+          - UncompressedRowBatchSize: 515.2 MiB (540175777)
+        CodeGen
+          - CodegenTime: 6ms (6000510)
+          - CompileTime: 32ms (32002719)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 158 (158)
+          - NumInstructions: 2,707 (2707)
+          - OptimizationTime: 155ms (155013171)
+          - PeakMemoryUsage: 1.3 MiB (1385984)
+          - PrepareTime: 23ms (23001954)
+          - TotalTime: 211ms (211017929)
+        HDFS_SCAN_NODE (id=0)
+          Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:3/756.39 MB 
+          ExecOption: PARQUET Codegen Enabled, Codegen enabled: 3 out of 3
+          Hdfs Read Thread Concurrency Bucket: 0:96.15% 1:3.846% 2:0% 3:0% 4:0% 
+          File Formats: PARQUET/SNAPPY:3 
+          - AverageHdfsReadThreadConcurrency: 0.04 (0.038461538461538464)
+          - AverageScannerThreadConcurrency: 1.85 (1.8461538461538463)
+          - BytesRead: 756.7 MiB (793429511)
+          - BytesReadDataNodeCache: 0 B (0)
+          - BytesReadLocal: 756.7 MiB (793429511)
+          - BytesReadRemoteUnexpected: 0 B (0)
+          - BytesReadShortCircuit: 756.7 MiB (793429511)
+          - CachedFileHandlesHitCount: 0 (0)
+          - CachedFileHandlesMissCount: 66 (66)
+          - CollectionItemsRead: 0 (0)
+          - DecompressionTime: 1.85s (1850157212)
+          - InactiveTotalTime: 0ns (0)
+          - MaxCompressedTextFileLength: 0 B (0)
+          - NumColumns: 21 (21)
+          - NumDictFilteredRowGroups: 0 (0)
+          - NumDisksAccessed: 1 (1)
+          - NumRowGroups: 3 (3)
+          - NumScannerThreadsStarted: 2 (2)
+          - NumScannersWithNoReads: 0 (0)
+          - NumStatsFilteredRowGroups: 0 (0)
+          - PeakMemoryUsage: 593.0 MiB (621818767)
+          - PerReadThreadRawHdfsThroughput: 1.7 GiB/s (1832245007)
+          - RemoteScanRanges: 0 (0)
+          - RowBatchQueueGetWaitTime: 406ms (406034503)
+          - RowBatchQueuePutWaitTime: 16.06s (16058364423)
+          - RowsRead: 18,164,191 (18164191)
+          - RowsReturned: 1,614,008 (1614008)
+          - RowsReturnedRate: 3824338 per second (3824338)
+          - ScanRangesComplete: 3 (3)
+          - ScannerThreadsInvoluntaryContextSwitches: 287 (287)
+          - ScannerThreadsTotalWallClockTime: 23.60s (23601005307)
+            - MaterializeTupleTime(*): 5.04s (5039428186)
+            - ScannerThreadsSysTime: 634ms (634201000)
+            - ScannerThreadsUserTime: 6.25s (6254408000)
+          - ScannerThreadsVoluntaryContextSwitches: 1,493 (1493)
+          - TotalRawHdfsReadTime(*): 433ms (433036798)
+          - TotalReadThroughput: 58.1 MiB/s (60972067)
+          - TotalTime: 422ms (422035862)
+      Instance 643bdb2d001170e:746a90a00000003 (host=jyu-impala-8.gce.cloudera.com:22000)
+        Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:4/759.54 MB 
+        - AverageThreadTokens: 2.84 (2.84)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 553.5 MiB (580368917)
+        - PeakReservation: 0 B (0)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 702.6 MiB (736679460)
+        - RowsProduced: 1,486,652 (1486652)
+        - TotalNetworkReceiveTime: 0ns (0)
+        - TotalNetworkSendTime: 8.78s (8780775086)
+        - TotalStorageWaitTime: 417ms (417036815)
+        - TotalThreadsInvoluntaryContextSwitches: 184 (184)
+        - TotalThreadsTotalWallClockTime: 35.16s (35164104073)
+          - TotalThreadsSysTime: 690ms (690147000)
+          - TotalThreadsUserTime: 9.25s (9247919000)
+        - TotalThreadsVoluntaryContextSwitches: 9,227 (9227)
+        - TotalTime: 12.35s (12351090278)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 12.14s (12137071386)
+            - ExecTreeExecTime: 40ms (40003532)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 189ms (189016685)
+            - ExecTreeOpenTime: 0ns (0)
+          - PrepareTime: 25ms (25002207)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        DataStreamSender (dst_id=1)
+          - BytesSent: 284.0 MiB (297762784)
+          - InactiveTotalTime: 0ns (0)
+          - NetworkThroughput(*): 813.6 MiB/s (853113201)
+          - OverallThroughput: 126.2 MiB/s (132327331)
+          - PeakMemoryUsage: 285.2 KiB (292048)
+          - RowsReturned: 1,486,652 (1486652)
+          - SerializeBatchTime: 1.90s (1901167864)
+          - TotalTime: 2.25s (2250198665)
+          - TransmitDataRPCTime: 349ms (349030801)
+          - UncompressedRowBatchSize: 474.6 MiB (497612215)
+        CodeGen
+          - CodegenTime: 6ms (6000530)
+          - CompileTime: 31ms (31002736)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 158 (158)
+          - NumInstructions: 2,707 (2707)
+          - OptimizationTime: 156ms (156013773)
+          - PeakMemoryUsage: 1.3 MiB (1385984)
+          - PrepareTime: 25ms (25002207)
+          - TotalTime: 213ms (213018804)
+        HDFS_SCAN_NODE (id=0)
+          Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:4/759.54 MB 
+          ExecOption: PARQUET Codegen Enabled, Codegen enabled: 4 out of 4
+          Hdfs Read Thread Concurrency Bucket: 0:95.83% 1:4.167% 2:0% 3:0% 4:0% 
+          File Formats: PARQUET/SNAPPY:4 
+          - AverageHdfsReadThreadConcurrency: 0.04 (0.041666666666666664)
+          - AverageScannerThreadConcurrency: 1.92 (1.9166666666666667)
+          - BytesRead: 759.9 MiB (796827065)
+          - BytesReadDataNodeCache: 0 B (0)
+          - BytesReadLocal: 759.9 MiB (796827065)
+          - BytesReadRemoteUnexpected: 0 B (0)
+          - BytesReadShortCircuit: 759.9 MiB (796827065)
+          - CachedFileHandlesHitCount: 0 (0)
+          - CachedFileHandlesMissCount: 88 (88)
+          - CollectionItemsRead: 0 (0)
+          - DecompressionTime: 1.68s (1684148655)
+          - InactiveTotalTime: 0ns (0)
+          - MaxCompressedTextFileLength: 0 B (0)
+          - NumColumns: 21 (21)
+          - NumDictFilteredRowGroups: 0 (0)
+          - NumDisksAccessed: 1 (1)
+          - NumRowGroups: 4 (4)
+          - NumScannerThreadsStarted: 2 (2)
+          - NumScannersWithNoReads: 0 (0)
+          - NumStatsFilteredRowGroups: 0 (0)
+          - PeakMemoryUsage: 551.1 MiB (577891291)
+          - PerReadThreadRawHdfsThroughput: 1.7 GiB/s (1848623508)
+          - RemoteScanRanges: 0 (0)
+          - RowBatchQueueGetWaitTime: 32ms (32002825)
+          - RowBatchQueuePutWaitTime: 16.05s (16055417280)
+          - RowsRead: 18,966,963 (18966963)
+          - RowsReturned: 1,486,652 (1486652)
+          - RowsReturnedRate: 41292242 per second (41292242)
+          - ScanRangesComplete: 4 (4)
+          - ScannerThreadsInvoluntaryContextSwitches: 172 (172)
+          - ScannerThreadsTotalWallClockTime: 22.84s (22838016002)
+            - MaterializeTupleTime(*): 4.47s (4472394805)
+            - ScannerThreadsSysTime: 424ms (424133000)
+            - ScannerThreadsUserTime: 5.75s (5749249000)
+          - ScannerThreadsVoluntaryContextSwitches: 1,517 (1517)
+          - TotalRawHdfsReadTime(*): 431ms (431038046)
+          - TotalReadThroughput: 60.7 MiB/s (63598616)
+          - TotalTime: 36ms (36003179)
+      Instance 643bdb2d001170e:746a90a00000004 (host=jyu-impala-3.gce.cloudera.com:22000)
+        Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:2/504.47 MB 
+        - AverageThreadTokens: 2.83 (2.8260869565217392)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 577.0 MiB (605016533)
+        - PeakReservation: 0 B (0)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 642.8 MiB (673980771)
+        - RowsProduced: 1,450,244 (1450244)
+        - TotalNetworkReceiveTime: 0ns (0)
+        - TotalNetworkSendTime: 7.80s (7804531411)
+        - TotalStorageWaitTime: 239ms (239016252)
+        - TotalThreadsInvoluntaryContextSwitches: 78 (78)
+        - TotalThreadsTotalWallClockTime: 32.61s (32614220543)
+          - TotalThreadsSysTime: 751ms (751802000)
+          - TotalThreadsUserTime: 8.50s (8497546000)
+        - TotalThreadsVoluntaryContextSwitches: 9,827 (9827)
+        - TotalTime: 11.77s (11766801198)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 11.54s (11543786038)
+            - ExecTreeExecTime: 113ms (113007686)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 197ms (197013392)
+            - ExecTreeOpenTime: 0ns (0)
+          - PrepareTime: 26ms (26001768)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        DataStreamSender (dst_id=1)
+          - BytesSent: 277.0 MiB (290459301)
+          - InactiveTotalTime: 0ns (0)
+          - NetworkThroughput(*): 784.7 MiB/s (822774874)
+          - OverallThroughput: 115.2 MiB/s (120764874)
+          - PeakMemoryUsage: 285.2 KiB (292048)
+          - RowsReturned: 1,450,244 (1450244)
+          - SerializeBatchTime: 2.05s (2049139546)
+          - TotalTime: 2.40s (2405163780)
+          - TransmitDataRPCTime: 353ms (353024029)
+          - UncompressedRowBatchSize: 462.7 MiB (485226743)
+        CodeGen
+          - CodegenTime: 6ms (6000408)
+          - CompileTime: 33ms (33002244)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 158 (158)
+          - NumInstructions: 2,707 (2707)
+          - OptimizationTime: 162ms (162011012)
+          - PeakMemoryUsage: 1.3 MiB (1385984)
+          - PrepareTime: 25ms (25001700)
+          - TotalTime: 221ms (221015024)
+        HDFS_SCAN_NODE (id=0)
+          Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:2/504.47 MB 
+          ExecOption: PARQUET Codegen Enabled, Codegen enabled: 2 out of 2
+          Hdfs Read Thread Concurrency Bucket: 0:91.3% 1:8.696% 2:0% 3:0% 4:0% 
+          File Formats: PARQUET/SNAPPY:2 
+          - AverageHdfsReadThreadConcurrency: 0.09 (0.08695652173913043)
+          - AverageScannerThreadConcurrency: 1.83 (1.826086956521739)
+          - BytesRead: 504.7 MiB (529173291)
+          - BytesReadDataNodeCache: 0 B (0)
+          - BytesReadLocal: 504.7 MiB (529173291)
+          - BytesReadRemoteUnexpected: 0 B (0)
+          - BytesReadShortCircuit: 504.7 MiB (529173291)
+          - CachedFileHandlesHitCount: 0 (0)
+          - CachedFileHandlesMissCount: 44 (44)
+          - CollectionItemsRead: 0 (0)
+          - DecompressionTime: 1.13s (1131077022)
+          - InactiveTotalTime: 0ns (0)
+          - MaxCompressedTextFileLength: 0 B (0)
+          - NumColumns: 21 (21)
+          - NumDictFilteredRowGroups: 0 (0)
+          - NumDisksAccessed: 1 (1)
+          - NumRowGroups: 2 (2)
+          - NumScannerThreadsStarted: 2 (2)
+          - NumScannersWithNoReads: 0 (0)
+          - NumStatsFilteredRowGroups: 0 (0)
+          - PeakMemoryUsage: 572.4 MiB (600192535)
+          - PerReadThreadRawHdfsThroughput: 1.6 GiB/s (1740583244)
+          - RemoteScanRanges: 0 (0)
+          - RowBatchQueueGetWaitTime: 100ms (100006800)
+          - RowBatchQueuePutWaitTime: 15.32s (15318042935)
+          - RowsRead: 12,518,080 (12518080)
+          - RowsReturned: 1,450,244 (1450244)
+          - RowsReturnedRate: 12947726 per second (12947726)
+          - ScanRangesComplete: 2 (2)
+          - ScannerThreadsInvoluntaryContextSwitches: 70 (70)
+          - ScannerThreadsTotalWallClockTime: 20.87s (20873421113)
+            - MaterializeTupleTime(*): 4.00s (4000272311)
+            - ScannerThreadsSysTime: 456ms (456052000)
+            - ScannerThreadsUserTime: 4.68s (4684686000)
+          - ScannerThreadsVoluntaryContextSwitches: 1,418 (1418)
+          - TotalRawHdfsReadTime(*): 304ms (304020674)
+          - TotalReadThroughput: 43.8 MiB/s (45979085)
+          - TotalTime: 112ms (112007618)
+      Instance 643bdb2d001170e:746a90a00000006 (host=jyu-impala-10.gce.cloudera.com:22000)
+        Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:3/756.56 MB 
+        - AverageThreadTokens: 2.86 (2.8636363636363638)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 579.5 MiB (607627445)
+        - PeakReservation: 0 B (0)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 826.3 MiB (866410223)
+        - RowsProduced: 1,262,854 (1262854)
+        - TotalNetworkReceiveTime: 0ns (0)
+        - TotalNetworkSendTime: 7.69s (7686633354)
+        - TotalStorageWaitTime: 367ms (367030244)
+        - TotalThreadsInvoluntaryContextSwitches: 289 (289)
+        - TotalThreadsTotalWallClockTime: 31.39s (31390586499)
+          - TotalThreadsSysTime: 698ms (698082000)
+          - TotalThreadsUserTime: 8.77s (8774213000)
+        - TotalThreadsVoluntaryContextSwitches: 8,727 (8727)
+        - TotalTime: 10.99s (10986905291)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 10.78s (10776887987)
+            - ExecTreeExecTime: 98ms (98008077)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 185ms (185015244)
+            - ExecTreeOpenTime: 0ns (0)
+          - PrepareTime: 25ms (25002060)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        DataStreamSender (dst_id=1)
+          - BytesSent: 240.0 MiB (251658813)
+          - InactiveTotalTime: 0ns (0)
+          - NetworkThroughput(*): 885.5 MiB/s (928553767)
+          - OverallThroughput: 117.9 MiB/s (123594340)
+          - PeakMemoryUsage: 285.2 KiB (292048)
+          - RowsReturned: 1,262,854 (1262854)
+          - SerializeBatchTime: 1.76s (1762145188)
+          - TotalTime: 2.04s (2036167773)
+          - TransmitDataRPCTime: 271ms (271022338)
+          - UncompressedRowBatchSize: 403.0 MiB (422583676)
+        CodeGen
+          - CodegenTime: 5ms (5000412)
+          - CompileTime: 31ms (31002554)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 158 (158)
+          - NumInstructions: 2,707 (2707)
+          - OptimizationTime: 153ms (153012608)
+          - PeakMemoryUsage: 1.3 MiB (1385984)
+          - PrepareTime: 24ms (24001978)
+          - TotalTime: 209ms (209017222)
+        HDFS_SCAN_NODE (id=0)
+          Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:3/756.56 MB 
+          ExecOption: PARQUET Codegen Enabled, Codegen enabled: 3 out of 3
+          Hdfs Read Thread Concurrency Bucket: 0:90.91% 1:9.091% 2:0% 3:0% 4:0% 
+          File Formats: PARQUET/SNAPPY:3 
+          - AverageHdfsReadThreadConcurrency: 0.09 (0.09090909090909091)
+          - AverageScannerThreadConcurrency: 1.86 (1.8636363636363635)
+          - BytesRead: 756.8 MiB (793603324)
+          - BytesReadDataNodeCache: 0 B (0)
+          - BytesReadLocal: 756.8 MiB (793603324)
+          - BytesReadRemoteUnexpected: 0 B (0)
+          - BytesReadShortCircuit: 756.8 MiB (793603324)
+          - CachedFileHandlesHitCount: 0 (0)
+          - CachedFileHandlesMissCount: 66 (66)
+          - CollectionItemsRead: 0 (0)
+          - DecompressionTime: 1.79s (1793147768)
+          - InactiveTotalTime: 0ns (0)
+          - MaxCompressedTextFileLength: 0 B (0)
+          - NumColumns: 21 (21)
+          - NumDictFilteredRowGroups: 0 (0)
+          - NumDisksAccessed: 1 (1)
+          - NumRowGroups: 3 (3)
+          - NumScannerThreadsStarted: 2 (2)
+          - NumScannersWithNoReads: 0 (0)
+          - NumStatsFilteredRowGroups: 0 (0)
+          - PeakMemoryUsage: 578.1 MiB (606211346)
+          - PerReadThreadRawHdfsThroughput: 2.0 GiB/s (2174076532)
+          - RemoteScanRanges: 0 (0)
+          - RowBatchQueueGetWaitTime: 85ms (85007004)
+          - RowBatchQueuePutWaitTime: 13.58s (13583119212)
+          - RowsRead: 18,351,323 (18351323)
+          - RowsReturned: 1,262,854 (1262854)
+          - RowsReturnedRate: 13018040 per second (13018040)
+          - ScanRangesComplete: 3 (3)
+          - ScannerThreadsInvoluntaryContextSwitches: 280 (280)
+          - ScannerThreadsTotalWallClockTime: 20.43s (20428683268)
+            - MaterializeTupleTime(*): 4.49s (4494370316)
+            - ScannerThreadsSysTime: 467ms (467564000)
+            - ScannerThreadsUserTime: 5.75s (5754260000)
+          - ScannerThreadsVoluntaryContextSwitches: 1,254 (1254)
+          - TotalRawHdfsReadTime(*): 365ms (365030077)
+          - TotalReadThroughput: 68.8 MiB/s (72106425)
+          - TotalTime: 97ms (97007995)
+      Instance 643bdb2d001170e:746a90a00000008 (host=jyu-impala-9.gce.cloudera.com:22000)
+        Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:3/756.37 MB 
+        - AverageThreadTokens: 2.84 (2.8421052631578947)
+        - BloomFilterBytes: 0 B (0)
+        - InactiveTotalTime: 0ns (0)
+        - PeakMemoryUsage: 585.0 MiB (613442206)
+        - PeakReservation: 0 B (0)
+        - PeakUsedReservation: 0 B (0)
+        - PerHostPeakMemUsage: 602.6 MiB (631902882)
+        - RowsProduced: 1,095,179 (1095179)
+        - TotalNetworkReceiveTime: 0ns (0)
+        - TotalNetworkSendTime: 6.40s (6397478445)
+        - TotalStorageWaitTime: 355ms (355026544)
+        - TotalThreadsInvoluntaryContextSwitches: 337 (337)
+        - TotalThreadsTotalWallClockTime: 26.50s (26500981966)
+          - TotalThreadsSysTime: 918ms (918246000)
+          - TotalThreadsUserTime: 8.54s (8541790000)
+        - TotalThreadsVoluntaryContextSwitches: 5,270 (5270)
+        - TotalTime: 9.33s (9328697682)
+        Fragment Instance Lifecycle Timings
+          - ExecTime: 9.11s (9113681606)
+            - ExecTreeExecTime: 105ms (105007853)
+          - InactiveTotalTime: 0ns (0)
+          - OpenTime: 188ms (188014057)
+            - ExecTreeOpenTime: 0ns (0)
+          - PrepareTime: 27ms (27002019)
+            - ExecTreePrepareTime: 0ns (0)
+          - TotalTime: 0ns (0)
+        DataStreamSender (dst_id=1)
+          - BytesSent: 211.4 MiB (221672377)
+          - InactiveTotalTime: 0ns (0)
+          - NetworkThroughput(*): 816.2 MiB/s (855813869)
+          - OverallThroughput: 127.0 MiB/s (133126604)
+          - PeakMemoryUsage: 285.2 KiB (292048)
+          - RowsReturned: 1,095,179 (1095179)
+          - SerializeBatchTime: 1.40s (1403104943)
+          - TotalTime: 1.67s (1665124546)
+          - TransmitDataRPCTime: 259ms (259019379)
+          - UncompressedRowBatchSize: 349.6 MiB (366561622)
+        CodeGen
+          - CodegenTime: 6ms (6000449)
+          - CompileTime: 31ms (31002318)
+          - InactiveTotalTime: 0ns (0)
+          - LoadTime: 0ns (0)
+          - ModuleBitcodeSize: 1.9 MiB (1950884)
+          - NumFunctions: 158 (158)
+          - NumInstructions: 2,707 (2707)
+          - OptimizationTime: 155ms (155011590)
+          - PeakMemoryUsage: 1.3 MiB (1385984)
+          - PrepareTime: 24ms (24001794)
+          - TotalTime: 211ms (211015777)
+        HDFS_SCAN_NODE (id=0)
+          Hdfs split stats (<volume id>:<# splits>/<split lengths>): 0:3/756.37 MB 
+          ExecOption: PARQUET Codegen Enabled, Codegen enabled: 3 out of 3
+          Hdfs Read Thread Concurrency Bucket: 0:94.74% 1:5.263% 2:0% 3:0% 4:0% 
+          File Formats: PARQUET/SNAPPY:3 
+          - AverageHdfsReadThreadConcurrency: 0.05 (0.05263157894736842)
+          - AverageScannerThreadConcurrency: 1.84 (1.8421052631578947)
+          - BytesRead: 756.7 MiB (793408600)
+          - BytesReadDataNodeCache: 0 B (0)
+          - BytesReadLocal: 756.7 MiB (793408600)
+          - BytesReadRemoteUnexpected: 0 B (0)
+          - BytesReadShortCircuit: 756.7 MiB (793408600)
+          - CachedFileHandlesHitCount: 0 (0)
+          - CachedFileHandlesMissCount: 66 (66)
+          - CollectionItemsRead: 0 (0)
+          - DecompressionTime: 1.88s (1878140423)
+          - InactiveTotalTime: 0ns (0)
+          - MaxCompressedTextFileLength: 0 B (0)
+          - NumColumns: 21 (21)
+          - NumDictFilteredRowGroups: 0 (0)
+          - NumDisksAccessed: 1 (1)
+          - NumRowGroups: 3 (3)
+          - NumScannerThreadsStarted: 2 (2)
+          - NumScannersWithNoReads: 0 (0)
+          - NumStatsFilteredRowGroups: 0 (0)
+          - PeakMemoryUsage: 583.3 MiB (611602082)
+          - PerReadThreadRawHdfsThroughput: 1.6 GiB/s (1724672351)
+          - RemoteScanRanges: 0 (0)
+          - RowBatchQueueGetWaitTime: 98ms (98007328)
+          - RowBatchQueuePutWaitTime: 10.15s (10148759037)
+          - RowsRead: 18,096,973 (18096973)
+          - RowsReturned: 1,095,179 (1095179)
+          - RowsReturnedRate: 10529779 per second (10529779)
+          - ScanRangesComplete: 3 (3)
+          - ScannerThreadsInvoluntaryContextSwitches: 327 (327)
+          - ScannerThreadsTotalWallClockTime: 17.20s (17199286303)
+            - MaterializeTupleTime(*): 4.65s (4648347659)
+            - ScannerThreadsSysTime: 646ms (646576000)
+            - ScannerThreadsUserTime: 5.81s (5809680000)
+          - ScannerThreadsVoluntaryContextSwitches: 1,078 (1078)
+          - TotalRawHdfsReadTime(*): 460ms (460034394)
+          - TotalReadThroughput: 79.5 MiB/s (83376271)
+          - TotalTime: 104ms (104007778)
